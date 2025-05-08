@@ -6,7 +6,7 @@
     <nav class="nav">
         <a href="/WEB_ThueHoTroKhamBenh/public/index.php" class="nav-link">Trang chủ</a>
         <a href="#loiich" class="nav-link">Về chúng tôi</a>
-        <a href="/WEB_ThueHoTroKhamBenh/public/datdichvu/datDV.php" class="nav-link customer-link">Đặt dịch vụ</a>
+        <a href="/WEB_ThueHoTroKhamBenh/public/datDV.php" class="nav-link customer-link">Đặt dịch vụ</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/driver/orders.php" class="nav-link driver-link" style="display: none;">Danh sách đơn</a>
         <a href="#dat" class="nav-link">Liên hệ</a>
         <span id="userName" class="nav-link" style="display: none;"></span>

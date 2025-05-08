@@ -11,7 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="Assets/scripts.js"></script>
+    <script src="Assets/scripts_auto.js"></script>
     <style>
         .header { position: sticky; top: 0; z-index: 50; background-color: white; }
         .login-container { max-width: 400px; margin: 20px auto; padding: 20px; background: #f7f7f7; border-radius: 8px; }

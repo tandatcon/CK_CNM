@@ -1,9 +1,13 @@
 function showNotification(message, type, redirectUrl = null) {
+    console.log('showNotification called:', { message, type, redirectUrl });
+
+    // Lấy các phần tử modal
     const modal = document.getElementById('notificationModal');
     const content = document.getElementById('notificationContent');
     const icon = document.getElementById('notificationIcon');
     const messageElement = document.getElementById('notificationMessage');
 
+    // Reset class của content và thêm class theo type
     content.className = 'notification-content';
     if (type === 'success') {
         content.classList.add('success');
@@ -16,20 +20,41 @@ function showNotification(message, type, redirectUrl = null) {
         icon.className = 'fas fa-exclamation-triangle';
     }
 
+    // Cập nhật nội dung thông báo
     messageElement.textContent = message;
+
+    // Hiển thị modal
     modal.style.display = 'block';
 
-    // Gán redirectUrl vào hàm closeNotification (lưu tạm)
-    closeNotification.redirectUrl = redirectUrl;
+    // Debug: Kiểm tra computed style của modal
+    const computedStyle = window.getComputedStyle(modal);
+    console.log('Modal computed styles:', {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        zIndex: computedStyle.zIndex
+    });
+
+    // Tự động đóng modal và chuyển hướng sau 3 giây
+    setTimeout(() => {
+        console.log('Auto-closing modal and redirecting to:', redirectUrl);
+        closeNotification(redirectUrl);
+    }, 1000);
 }
 
-
-function closeNotification() {
+function closeNotification(redirectUrl = null) {
+    console.log('closeNotification called with redirectUrl:', redirectUrl);
     const modal = document.getElementById('notificationModal');
-    modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+        console.log('Modal closed');
+    } else {
+        console.error('Modal element not found for closing');
+    }
 
-    // Chuyển trang tại đây nếu có URL
-    if (closeNotification.redirectUrl) {
-        window.location.href = closeNotification.redirectUrl;
+    // Chuyển hướng nếu có redirectUrl
+    if (redirectUrl) {
+        console.log('Redirecting to:', redirectUrl);
+        window.location.href = redirectUrl;
     }
 }

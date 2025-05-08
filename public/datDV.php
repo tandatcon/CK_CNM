@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Xuất - Đi cùng tôi</title>
-    <link rel="stylesheet" href="../Assets/styles.css">
+    <link rel="stylesheet" href="Assets/styles.css?v=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="../Assets/scripts.js?v=2"></script>
+    <script src="Assets/scripts.js?v=3"></script>
     <style>
         .ct {
             background-image: url('/WEB_ThueHoTroKhamBenh/IMG/cauhoi.jpg');
@@ -108,12 +108,49 @@
         .notification-content button:hover {
             background: #e5e7eb;
         }
+        .booking-info-card {
+  flex: 1;
+  background-color: #f9f5ff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(107, 70, 193, 0.15);
+  color: #4a5568;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  transition: box-shadow 0.3s ease;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  color: black;
+}
+
+.info-list {
+  font-size: 17px;
+  line-height: 1.8;
+  padding-left: 1.5rem;
+  list-style-position: inside;
+}
+
+.info-list li {
+  margin-bottom: 0.75rem;
+}
+
+.booking-info-card:hover {
+  box-shadow: 0 12px 28px rgba(107, 70, 193, 0.25);
+}
+
+
     </style>
 </head>
 
 <body class="bg-white text-gray-800">
     <?php
-    include("../Assets/header.php");
+    include("Assets/header.php");
     ?>
     <div class="ct">
         <div class="br p-6 text-white" id="ct" style="display: none;">
@@ -151,13 +188,17 @@
                                 <option value="">-- Chọn bệnh viện --</option>
                             </select>
                             <br><br>
+                            <label for="diemhen"></label>
+                            <input type="text" id="gia" name="gia" placeholder="Điểm hẹn tại khu vực bệnh viên">
+                            <br><br>
+                     
                             <label for="date">Chọn ngày khám:</label>
                             <input type="date" id="date" name="date" required>
                             <br><br>
                             <label for="time">Chọn giờ hẹn:</label>
                             <input type="time" id="time" name="time" required>
                             <br><br>
-                            <label for="condition">Tình trạng bệnh nhân:</label><br>
+                            <label for="condition">Tình trạng sức khỏe:</label><br>
                             <textarea id="condition" name="condition" rows="4" cols="50"
                                 placeholder="Mô tả tình trạng sức khỏe của bệnh nhân..." required></textarea>
                             <br><br>
@@ -168,10 +209,29 @@
                         </form>
                     </div>
                     <!-- Bên phải: Gợi ý nội dung thêm -->
-                    <div class="booking-info-right"
-                        style="flex: 1; background-color: #f7f7f7; padding: 2rem; border-radius: 10px;">
-                        hinhanh
-                    </div>
+                    <div class="booking-info-card">
+  <p class="section-title">Lưu ý quan trọng !</p>
+  <ol class="info-list">
+    <li>Dịch vụ chỉ áp dụng tại bệnh viện. Bạn và nhân viên sẽ gặp nhau tại bệnh viện theo giờ đã đặt trên hệ thống.</li>
+  </ol>
+
+  <p class="section-title">Hướng dẫn đặt dịch vụ của chúng tôi</p>
+  <ol class="info-list">
+    <li>- Khi chọn <strong>"Đặt hộ cho người khác"</strong>, cần điền đúng thông tin <strong>"Người được đặt hộ"</strong>.</li>
+    <li>- Chọn đúng bệnh viện bạn muốn đến khám.</li>
+    <li>- Địa điểm hẹn là khu vực cụ thể tại bệnh viện (ví dụ: cổng 1, cổng 2...).</li>
+    <li>- Ngày khám phải sau ngày hôm nay ít nhất <strong>1 ngày</strong>.</li>
+    <li>- Giờ hẹn là thời điểm gặp nhân viên và là lúc <strong>bắt đầu dịch vụ</strong>.</li>
+    <li>- Ghi rõ tình trạng sức khỏe như: di chuyển khó khăn, khiếm thị, v.v.</li>
+  </ol>
+
+  <p class="section-title">Chi phí dịch vụ</p>
+  <ol class="info-list">
+    <li><strong>+ 23,000 VNĐ/giờ</strong> cho 5 giờ đầu tiên.</li>
+    <li><strong>+ 18,000 VNĐ/giờ</strong> từ giờ thứ 6 trở đi.</li>
+  </ol>
+</div>
+
                 </section>
             </div>
         </div>
@@ -185,44 +245,31 @@
             <button onclick="closeNotification()">Đóng</button>
         </div>
     </div>
-    <!-- ---- -->
-    <!-- <script>
-        localStorage.removeItem('token');
-        localStorage.removeItem('full_name');
-        showNotification('Đăng xuất thành công!', 'success', '../index.php');
-    </script> -->
-    <!-- ----- -->
+
     <?php
-    include("../Assets/footer.php");
+    include("Assets/footer.php");
     ?>
 
     <!--  -->
     <script>
 
         $(document).ready(function () {
-
             // Kiểm tra đăng nhập ngay khi trang tải
             if (!checkLogin()) {
                 return; // Dừng thực thi các hàm khác nếu chưa đăng nhập
             }
-
-
-
             // Kiểm tra đăng nhập
             function checkLogin() {
                 const token = localStorage.getItem('token');
                 const role = localStorage.getItem('role');
                 const mainContent = document.getElementById('ct');
                 if (!token || role !== '0') {
-                    showNotification('Vui lòng đăng nhập để đặt dịch vụ !', 'warning', '../login.php');
+                    showNotification('Vui lòng đăng nhập để đặt dịch vụ !', 'warning', 'login.php');
                     return false;
                 }
                 if (mainContent) mainContent.style.display = 'block';
                 return true;
             }
-
-
-
             // Load danh sách bệnh viện
             function loadHospitals() {
                 $.ajax({
@@ -235,10 +282,9 @@
                             hospitalSelect.empty();
                             hospitalSelect.append('<option value="">-- Chọn bệnh viện --</option>');
                             data.data.forEach(hospital => {
-                                hospitalSelect.append(`<option value="${hospital.id}">${hospital.name}</option>`);
+                                hospitalSelect.append(`<option value="${hospital.id_benhvien}">${hospital.ten_benhvien}</option>`);
                             });
                         } else {
-
                             showNotification('Không thể tải danh sách bệnh viện', 'danger ');
                         }
                     },

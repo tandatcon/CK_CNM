@@ -43,8 +43,7 @@ try {
     $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
 
     // Kiểm tra vai trò
-    if (!in_array($decoded->role, ['user', 'admin'])) {
-        echo json_encode(array(
+    if (!in_array($decoded->role, ['user', 'admin'])) {        echo json_encode(array(
             "success" => false,
             "message" => "Bạn không có quyền đặt dịch vụ"
         ));

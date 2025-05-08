@@ -547,20 +547,25 @@ button[type="submit"]:hover {
 .booking-section h2, .booking-section h3 {
   font-weight: bold;
   color: #2c3e50;
+  font-size: 50px;
 }
 .booking-section label {
   display: block;
   margin: 8px 0 4px;
   font-weight: 500;
+  font-size: 20px;
+  color: #2563eb;;
+  
 }
 .booking-form-container input,
 .booking-form-container select,
 .booking-form-container textarea {
-  color: black;
+  
   width: 100%;
   padding: 8px;
   border: 1px solid black;
   border-radius: 6px;
+  color: black;
 }
 .booking-form-container button {
   background-color: #2563eb;
@@ -574,4 +579,3 @@ button[type="submit"]:hover {
 .booking-form-container button:hover {
   background-color: #2563eb;
 }
-

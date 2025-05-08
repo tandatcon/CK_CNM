@@ -7,7 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 try {
     $conn = getDBConnection();
-    $stmt = $conn->prepare("SELECT id, name, address FROM hospitals ORDER BY name");
+    $stmt = $conn->prepare("SELECT id_benhvien, ten_benhvien, diachi FROM hospitals ORDER BY ten_benhvien");
     $stmt->execute();
     $hospitals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

@@ -1,3 +1,5 @@
+let redirectAfterClose = null; // biến toàn cục
+
 function showNotification(message, type, redirectUrl = null) {
     const modal = document.getElementById('notificationModal');
     const content = document.getElementById('notificationContent');
@@ -19,17 +21,16 @@ function showNotification(message, type, redirectUrl = null) {
     messageElement.textContent = message;
     modal.style.display = 'block';
 
-    // Gán redirectUrl vào hàm closeNotification (lưu tạm)
-    closeNotification.redirectUrl = redirectUrl;
+    // Gán URL chuyển hướng
+    redirectAfterClose = redirectUrl;
 }
-
 
 function closeNotification() {
     const modal = document.getElementById('notificationModal');
     modal.style.display = 'none';
 
-    // Chuyển trang tại đây nếu có URL
-    if (closeNotification.redirectUrl) {
-        window.location.href = closeNotification.redirectUrl;
+    // Thực hiện chuyển hướng nếu có URL
+    if (redirectAfterClose) {
+        window.location.href = redirectAfterClose;
     }
 }
