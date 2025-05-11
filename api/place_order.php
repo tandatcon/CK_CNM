@@ -98,31 +98,51 @@ try {
     $diemhen = trim($input['diemhen']);
     $appointment_time = $input['appointment_time'];
     $condition = trim($input['condition']);
-    $guardian_relation = isset($input['guardian_relation']) ? trim($input['guardian_relation']) : '';
-    $guardian_name = isset($input['guardian_name']) ? trim($input['guardian_name']) : '';
-    $guardian_phone = isset($input['guardian_phone']) ? trim($input['guardian_phone']) : '';
+    $quanhe_ho = isset($input['guardian_relation']) ? trim($input['guardian_relation']) : '';
+    $ten_ho = isset($input['guardian_name']) ? trim($input['guardian_name']) : '';
+    $sdt_ho = isset($input['guardian_phone']) ? trim($input['guardian_phone']) : '';
+    $namsinh = $input['namsinh'];
+    $gt = $input['gt'];
+    // $namsinh = 'hello';
+    // $gt = 'hello';
 
     // Lưu vào bảng orders
-    $stmt = $conn->prepare("
-        INSERT INTO orders (
-            user_id, full_name, phone, diemhen, hospital_id, appointment_date, appointment_time, 
-            condition, guardian_relation, guardian_name, guardian_phone
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    if ($quanhe_ho!=''){
+        $stmt = $conn->prepare("
+        INSERT INTO datho_dichvu (
+            id_nguoidatho,quanhe_ho,ten_ho,namsinh,gioitinh,sdt_ho,id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham) 
+            VALUES ( ?, ?, ?, ?,?,?,?,?,?,?,?)
     ");
+    
     $stmt->execute([
         $user_id,
-        $full_name,
-        $phone,
-        $diemhen,
+        $quanhe_ho,
+        $ten_ho,
+        $namsinh,
+        $gt,
+        $sdt_ho,
         $hospital_id,
+        $diemhen,
         $appointment_date,
         $appointment_time,
         $condition,
-        $guardian_relation,
-        $guardian_name,
-        $guardian_phone
+        ]);
+    }else{
+    $stmt = $conn->prepare("
+        INSERT INTO datdichvu (id_nguoikham,gt,namsinh,id_benhvien , diemhen, ngayhen, giohen, tinhtrang_nguoikham) VALUES (?,?, ?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $user_id,
+        $gt,
+        $namsinh,
+        $hospital_id,
+        $diemhen,
+        $appointment_date,
+        $appointment_time,
+        $condition,
     ]);
-
+    }
+    
     // Trả về phản hồi thành công
     echo json_encode(['success' => true, 'message' => 'Đặt dịch vụ thành công']);
 

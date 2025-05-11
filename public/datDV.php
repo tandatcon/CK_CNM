@@ -174,6 +174,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
+            color: #333;
         }
 
         .error-message {
@@ -216,112 +217,143 @@
             color: black;
             opacity: 1;
         }
+
+        .radio-group {
+            margin-bottom: 15px;
+        }
+
+        .radio-group label {
+            margin-right: 1rem;
+            font-weight: normal;
+            color: #333;
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
     <?php include("Assets/header.php"); ?>
     <div class="ct">
         <div class="br" id="ct" style="display: none;">
-            <div class="form mb-4">
-                <label class="mr-4"><input type="radio" name="datdv" value="ban" checked> Đặt cho bạn</label>
+            <!-- Radio buttons chọn loại đặt dịch vụ -->
+            <div class="radio-group">
+                <label><input type="radio" name="datdv" value="ban" checked> Đặt cho bạn</label>
                 <label><input type="radio" name="datdv" value="nguoi_khac"> Đặt hộ người khác</label>
             </div>
             <div id="formContainer">
-                <h2 id="formTitle"> <b> ĐẶT DỊCH VỤ CHO BẠN </b> </h2>
+                <h2 id="formTitle"><b>ĐẶT DỊCH VỤ CHO BẠN</b></h2>
                 <form id="bookingForm" onsubmit="return handleBooking(event)">
+                    <!-- Thông tin người đặt -->
                     <div class="form-group">
                         <label for="full_name">Họ và Tên của bạn:</label>
-                        <input type="text" id="full_name" placeholder="Họ tên của bạn" class="text-black" disabled>
-                        <div id="full_name-error" class="error-message">Không để trống !</div>
+                        <input type="text" id="full_name" placeholder="Họ tên của bạn" disabled>
+                        <div id="full_name-error" class="error-message">Không để trống!</div>
                     </div>
                     <div class="form-group">
                         <label for="phone">Số điện thoại của bạn:</label>
-                        <input type="text" id="phone" placeholder="Số điện thoại" class="text-black" disabled>
-                        <div id="phone-error" class="error-message">Số điện thoại 10 số, bắt đầu bằng số "0" !</div>
+                        <input type="text" id="phone" placeholder="Số điện thoại" disabled>
+                        <div id="phone-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!</div>
                     </div>
+                    <!-- Giới tính và năm sinh cho "Đặt cho bạn" -->
+                    <div class="radio-group" id="an">
+                        <label style="font-weight: bold; color: #333;">Giới tính:</label>
+                        <label><input type="radio" name="gt" value="0" checked> Nam</label>
+                        <label><input type="radio" name="gt" value="1"> Nữ</label>
+                    </div>
+                    <div class="form-group" id="namsinh-container">
+                        <label for="namsinh">Năm sinh:</label>
+                        <input type="text" id="namsinh" placeholder="Ví dụ: 2000">
+                        <div id="namsinh-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!</div>
+                    </div>
+                    <!-- Thông tin người được đặt hộ -->
                     <div id="guardianInfo" style="display: none;">
                         <div class="form-group">
-                            <label for="quanhe">Quan hệ của bạn với người được đặt hộ:</label>
-                            <input type="text" id="quanhe" class="text-black">
-                            <div id="quanhe-error" class="error-message">Không được để trống!</div>
+                            <label for="quanhe">Quan hệ với người được đặt hộ:</label>
+                            <input type="text" id="quanhe" placeholder="Ví dụ: Con, Anh/Chị">
+                            <div id="quanhe-error" class="error-message">Không để trống!</div>
                         </div>
                         <div class="form-group">
                             <label for="ten">Họ và Tên người được đặt hộ:</label>
-                            <input type="text" id="ten" class="text-black">
-                            <div id="ten-error" class="error-message">Không để trống !</div>
+                            <input type="text" id="ten" placeholder="Họ tên người được đặt hộ">
+                            <div id="ten-error" class="error-message">Không để trống!</div>
+                        </div>
+                        <div class="radio-group">
+                            <label style="font-weight: bold; color: #333;">Giới tính:</label>
+                            <label><input type="radio" name="gt" value="0" checked> Nam</label>
+                            <label><input type="radio" name="gt" value="1"> Nữ</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="namsinh_guardian">Năm sinh:</label>
+                            <input type="text" id="namsinh_guardian" placeholder="Ví dụ: 2000">
+                            <div id="namsinh_guardian-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!</div>
                         </div>
                         <div class="form-group">
                             <label for="sdt">Số điện thoại người được đặt hộ:</label>
-                            <input type="text" id="sdt" class="text-black">
-                            <div id="sdt-error" class="error-message">Số điện thoại gồm 10 số bắt đầu bằng "0"!</div>
+                            <input type="text" id="sdt" placeholder="Số điện thoại">
+                            <div id="sdt-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!</div>
                         </div>
                     </div>
+                    <!-- Thông tin đặt lịch -->
                     <section class="booking-section" style="display: flex; gap: 2rem; padding: 2rem;">
                         <div class="booking-form-container" style="flex: 1;">
                             <div class="form-group">
                                 <label for="hospital">Chọn bệnh viện:</label>
-                                <select id="hospital" name="hospital" required class="text-black">
+                                <select id="hospital" name="hospital" required>
                                     <option value="">-- Chọn bệnh viện --</option>
                                 </select>
-                                <div id="hospital-error" class="error-message">Không để trống !</div>
+                                <div id="hospital-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
                                 <label for="diemhen">Điểm hẹn:</label>
-                                <input type="text" id="diemhen" name="diemhen" placeholder="Điểm hẹn tại khu vực bệnh viện" class="text-black">
-                                <div id="diemhen-error" class="error-message">Không để trống !</div>
+                                <input type="text" id="diemhen" name="diemhen" placeholder="Điểm hẹn tại khu vực bệnh viện">
+                                <div id="diemhen-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
                                 <label for="date">Chọn ngày khám:</label>
-                                <input type="date" id="date" name="date" required class="text-black">
-                                <div id="date-error" class="error-message">Ngày đặt phải sau ngày hôm nay ít nhất 1 ngày !</div>
+                                <input type="date" id="date" name="date" required>
+                                <div id="date-error" class="error-message">Ngày khám phải sau ngày hôm nay!</div>
                             </div>
                             <div class="form-group">
                                 <label for="time">Chọn giờ hẹn:</label>
-                                <input type="time" id="time" name="time" required class="text-black">
-                                <div id="time-error" class="error-message">Không để trống !</div>
+                                <input type="time" id="time" name="time" required>
+                                <div id="time-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
                                 <label for="condition">Tình trạng sức khỏe:</label>
-                                <textarea id="condition" name="condition" rows="4" placeholder="Mô tả tình trạng sức khỏe của bệnh nhân..." required class="text-black"></textarea>
-                                <div id="condition-error" class="error-message">Không để trống !</div>
+                                <textarea id="condition" name="condition" rows="4" placeholder="Mô tả tình trạng sức khỏe của bệnh nhân..." required></textarea>
+                                <div id="condition-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
                                 <label for="gia"></label>
-                                <input type="text" id="gia" name="gia" style="color: black;" placeholder="Giá dịch vụ: từ 23.000VNĐ/Giờ" disabled class="text-black">
+                                <input type="text" id="gia" name="gia" placeholder="Giá dịch vụ: từ 23.000VNĐ/Giờ" disabled>
                             </div>
                             <button type="submit" id="submitButton">Đặt lịch</button>
                         </div>
-                    <!-- Bên phải: Gợi ý nội dung thêm -->
-                    <div class="booking-info-card">
-                        <p class="section-title">Lưu ý quan trọng !</p>
-                        <ol class="info-list">
-                            <li>Dịch vụ chỉ áp dụng tại bệnh viện. Bạn và nhân viên sẽ gặp nhau tại bệnh viện theo giờ
-                                đã đặt trên hệ thống.</li>
-                        </ol>
-
-                        <p class="section-title">Hướng dẫn đặt dịch vụ của chúng tôi</p>
-                        <ol class="info-list">
-                            <li>- Khi chọn <strong>"Đặt hộ cho người khác"</strong>, cần điền đúng thông tin
-                                <strong>"Người được đặt hộ"</strong>.
-                            </li>
-                            <li>- Chọn đúng bệnh viện bạn muốn đến khám.</li>
-                            <li>- Địa điểm hẹn là khu vực cụ thể tại bệnh viện (ví dụ: cổng 1, cổng 2...).</li>
-                            <li>- Ngày khám phải sau ngày hôm nay ít nhất <strong>1 ngày</strong>.</li>
-                            <li>- Giờ hẹn là thời điểm gặp nhân viên và là lúc <strong>bắt đầu dịch vụ</strong>.</li>
-                            <li>- Ghi rõ tình trạng sức khỏe như: di chuyển khó khăn, khiếm thị, v.v.</li>
-                        </ol>
-
-                        <p class="section-title">Chi phí dịch vụ</p>
-                        <ol class="info-list">
-                            <li><strong>+ 23,000 VNĐ/giờ</strong> cho 5 giờ đầu tiên.</li>
-                            <li><strong>+ 18,000 VNĐ/giờ</strong> từ giờ thứ 6 trở đi.</li>
-                        </ol>
-                    </div>
-
-                </section>
+                        <!-- Thông tin hướng dẫn -->
+                        <div class="booking-info-card">
+                            <p class="section-title">Lưu ý quan trọng!</p>
+                            <ol class="info-list">
+                                <li>Dịch vụ chỉ áp dụng tại bệnh viện. Bạn và nhân viên sẽ gặp nhau tại bệnh viện theo giờ đã đặt.</li>
+                            </ol>
+                            <p class="section-title">Hướng dẫn đặt dịch vụ</p>
+                            <ol class="info-list">
+                                <li>Khi chọn <strong>"Đặt hộ người khác"</strong>, cần điền đúng thông tin <strong>"Người được đặt hộ"</strong>.</li>
+                                <li>Chọn đúng bệnh viện bạn muốn đến khám.</li>
+                                <li>Địa điểm hẹn là khu vực cụ thể tại bệnh viện (ví dụ: cổng 1, cổng 2...).</li>
+                                <li>Ngày khám phải sau ngày hôm nay ít nhất <strong>1 ngày</strong>.</li>
+                                <li>Giờ hẹn là thời điểm gặp nhân viên và bắt đầu dịch vụ.</li>
+                                <li>Ghi rõ tình trạng sức khỏe như: di chuyển khó khăn, khiếm thị, v.v.</li>
+                            </ol>
+                            <p class="section-title">Chi phí dịch vụ</p>
+                            <ol class="info-list">
+                                <li><strong>23,000 VNĐ/giờ</strong> cho 5 giờ đầu tiên.</li>
+                                <li><strong>18,000 VNĐ/giờ</strong> từ giờ thứ 6 trở đi.</li>
+                            </ol>
+                        </div>
+                    </section>
+                </form>
             </div>
         </div>
     </div>
+    <!-- Modal thông báo -->
     <div class="notification-modal" id="notificationModal">
         <div class="notification-content" id="notificationContent">
             <i id="notificationIcon"></i>
@@ -329,12 +361,7 @@
             <button onclick="closeNotification()">Đóng</button>
         </div>
     </div>
-
-    <?php
-    include("Assets/footer.php");
-    ?>
-
-    <!--  -->
+    <?php include("Assets/footer.php"); ?>
     <script>
         $(document).ready(function () {
             // Kiểm tra đăng nhập
@@ -350,7 +377,7 @@
                 return true;
             }
 
-            // Load danh sách bệnh viện
+            // Tải danh sách bệnh viện
             function loadHospitals() {
                 $.ajax({
                     url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_hospitals.php',
@@ -365,10 +392,11 @@
                                 hospitalSelect.append(`<option value="${hospital.id_benhvien}">${hospital.ten_benhvien}</option>`);
                             });
                         } else {
-                            showNotification('Không thể tải danh sách bệnh viện', 'danger');
+                            showNotification('Không thể tải danh sách bệnh viện: ' + (data.message || 'Lỗi không xác định'), 'danger');
                         }
                     },
-                    error: function () {
+                    error: function (xhr, status, error) {
+                        console.log('Lỗi tải bệnh viện:', xhr.status, error);
                         showNotification('Lỗi kết nối server khi tải bệnh viện', 'danger');
                     }
                 });
@@ -390,16 +418,17 @@
                             $('#phone').val(data.data.sdt || '');
                             updateButtonState();
                         } else {
-                            showNotification(data.message, 'danger');
+                            showNotification(data.message || 'Không thể tải thông tin người dùng', 'danger');
                         }
                     },
-                    error: function () {
+                    error: function (xhr, status, error) {
+                        console.log('Lỗi tải thông tin người dùng:', xhr.status, error);
                         showNotification('Lỗi kết nối server khi tải thông tin người dùng', 'danger');
                     }
                 });
             }
 
-            // Hàm kiểm tra tính hợp lệ của form
+            // Kiểm tra tính hợp lệ của form
             function isFormValid() {
                 const full_name = $('#full_name').val().trim();
                 const phone = $('#phone').val().trim();
@@ -412,8 +441,12 @@
                 const quanhe = $('#quanhe').val().trim();
                 const ten = $('#ten').val().trim();
                 const sdt = $('#sdt').val().trim();
+                const namsinh = datdv === 'ban' ? $('#namsinh').val().trim() : $('#namsinh_guardian').val().trim();
+                const gt = $('input[name="gt"]:checked').val();
 
                 const phoneRegex = /^0\d{9}$/;
+                const yearRegex = /^\d{4}$/;
+                const currentYear = new Date().getFullYear();
                 let isValid = true;
 
                 // Reset lỗi
@@ -442,7 +475,6 @@
                     isValid = false;
                 }
                 if (!date || new Date(date) <= new Date()) {
-                    $('#date-error').text('Ngày khám phải sau ngày hôm nay!');
                     $('#date-error').addClass('visible');
                     $('#date').addClass('input-invalid');
                     isValid = false;
@@ -455,6 +487,16 @@
                 if (!condition) {
                     $('#condition-error').addClass('visible');
                     $('#condition').addClass('input-invalid');
+                    isValid = false;
+                }
+                if (!namsinh || !yearRegex.test(namsinh) || namsinh < 1900 || namsinh > currentYear) {
+                    if (datdv === 'ban') {
+                        $('#namsinh-error').addClass('visible');
+                        $('#namsinh').addClass('input-invalid');
+                    } else {
+                        $('#namsinh_guardian-error').addClass('visible');
+                        $('#namsinh_guardian').addClass('input-invalid');
+                    }
                     isValid = false;
                 }
 
@@ -482,11 +524,10 @@
 
             // Cập nhật trạng thái nút
             function updateButtonState() {
-                const button = $('#submitButton');
-                button.prop('disabled', !isFormValid());
+                $('#submitButton').prop('disabled', !isFormValid());
             }
 
-            // Hàm hiển thị thông báo
+            // Hiển thị thông báo
             function showNotification(message, type, redirectUrl = null) {
                 const modal = $('#notificationModal');
                 const content = $('#notificationContent');
@@ -522,20 +563,25 @@
             $('input[name="datdv"]').change(function () {
                 const selected = $(this).val();
                 if (selected === 'ban') {
-                    loadUserInfo();
                     $('#formTitle').text('ĐẶT DỊCH VỤ CHO BẠN');
                     $('#guardianInfo').hide();
+                    $('#an').show();
+                    $('#namsinh-container').show();
                     $('#full_name, #phone').prop('disabled', true);
+                    loadUserInfo();
                 } else {
                     $('#formTitle').text('ĐẶT DỊCH VỤ CHO NGƯỜI KHÁC');
-                    
                     $('#guardianInfo').show();
+                    $('#an').hide();
+                    $('#namsinh-container').hide();
+                    $('#full_name, #phone').prop('disabled', true);
+                    loadUserInfo();
                 }
                 updateButtonState();
             });
 
             // Gắn sự kiện input để cập nhật trạng thái nút
-            $('#full_name, #phone, #hospital, #diemhen, #date, #time, #condition, #quanhe, #ten, #sdt').on('input change', updateButtonState);
+            $('#full_name, #phone, #hospital, #diemhen, #date, #time, #condition, #quanhe, #ten, #sdt, #namsinh, #namsinh_guardian').on('input change', updateButtonState);
 
             // Xử lý form đặt lịch
             window.handleBooking = async function (event) {
@@ -562,11 +608,21 @@
                 const guardian_relation = $('#quanhe').val().trim();
                 const guardian_name = $('#ten').val().trim();
                 const guardian_phone = $('#sdt').val().trim();
+                const namsinh = datdv === 'ban' ? $('#namsinh').val().trim() : $('#namsinh_guardian').val().trim();
+                const gt = $('input[name="gt"]:checked').val();
+
+                if (!token) {
+                    showNotification('Vui lòng đăng nhập để đặt dịch vụ!', 'warning', 'login.php');
+                    button.prop('disabled', !isFormValid()).text('Đặt lịch');
+                    return false;
+                }
 
                 const payload = {
                     full_name,
                     phone,
                     diemhen,
+                    namsinh,
+                    gt,
                     hospital_id,
                     appointment_date,
                     appointment_time,
@@ -576,22 +632,29 @@
                     guardian_name: datdv === 'nguoi_khac' ? guardian_name : '',
                     guardian_phone: datdv === 'nguoi_khac' ? guardian_phone : ''
                 };
-                console.log(payload)
+                console.log('Payload gửi đi:', payload);
+
                 try {
                     const response = await fetch('http://localhost/WEB_ThueHoTroKhamBenh/api/place_order.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
+                    console.log('Phản hồi từ server:', response.status, response.statusText);
+                    if (!response.ok) {
+                        throw new Error(`Lỗi HTTP: ${response.status} ${response.statusText}`);
+                    }
                     const data = await response.json();
+                    console.log('Dữ liệu JSON:', data);
 
                     if (data.success) {
                         showNotification('Đặt dịch vụ thành công! Vui lòng chờ tài xế chấp nhận.', 'success', 'index.php');
                     } else {
-                        showNotification(data.message, 'danger');
+                        showNotification(data.message || 'Lỗi không xác định từ server', 'danger');
                     }
                 } catch (error) {
-                    showNotification('Lỗi kết nối máy chủ', 'danger');
+                    console.log('Lỗi chi tiết:', error);
+                    showNotification(`Lỗi kết nối máy chủ: ${error.message}`, 'danger');
                 } finally {
                     button.prop('disabled', !isFormValid()).text('Đặt lịch');
                 }
