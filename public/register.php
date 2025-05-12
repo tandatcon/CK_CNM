@@ -11,6 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="Assets/scripts.js">
     <style>
         .header { position: sticky; top: 0; z-index: 50; background-color: white; }
         .register-container { max-width: 400px; margin: 20px auto; padding: 20px; background: #f7f7f7; border-radius: 8px; }
@@ -103,47 +104,7 @@
         }
 
         // Hàm hiển thị thông báo
-        function showNotification(message, type, redirectUrl = null) {
-            const modal = document.getElementById('notificationModal');
-            const content = document.getElementById('notificationContent');
-            const icon = document.getElementById('notificationIcon');
-            const messageElement = document.getElementById('notificationMessage');
-
-            // Reset classes
-            content.className = 'notification-content';
-            // Set type-specific styles and icon
-            if (type === 'success') {
-                content.classList.add('success');
-                icon.className = 'fas fa-check-circle';
-            } else if (type === 'error') {
-                content.classList.add('error');
-                icon.className = 'fas fa-exclamation-circle';
-            } else if (type === 'warning') {
-                content.classList.add('warning');
-                icon.className = 'fas fa-exclamation-triangle';
-            }
-
-            // Set message
-            messageElement.textContent = message;
-
-            // Show modal
-            modal.style.display = 'block';
-
-            // Auto-close after 3 seconds (optional)
-            setTimeout(() => {
-                closeNotification();
-                if (redirectUrl) {
-                    window.location.href = redirectUrl;
-                }
-            }, 3000);
-        }
-
-        // Hàm đóng thông báo
-        function closeNotification() {
-            const modal = document.getElementById('notificationModal');
-            modal.style.display = 'none';
-        }
-
+        
         // Hàm validate form đăng ký
         async function validateRegisterForm(event) {
             event.preventDefault();

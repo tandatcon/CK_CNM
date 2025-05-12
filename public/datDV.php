@@ -363,11 +363,13 @@
     </div>
     <?php include("Assets/footer.php"); ?>
     <script>
+        
+
         $(document).ready(function () {
             // Kiểm tra đăng nhập
             function checkLogin() {
-                const token = localStorage.getItem('token');
-                const role = localStorage.getItem('role');
+                const token = sessionStorage.getItem('token');
+                const role = sessionStorage.getItem('role');
                 const mainContent = document.getElementById('ct');
                 if (!token || role !== '0') {
                     showNotification('Vui lòng đăng nhập để đặt dịch vụ!', 'warning', 'login.php');
@@ -404,29 +406,50 @@
 
             // Lấy thông tin người dùng
             function loadUserInfo() {
-                const token = localStorage.getItem('token');
-                if (!token) return;
+    const token = sessionStorage.getItem('token');  // Hoặc sử dụng localStorage.getItem('token')
+    if (!token) return;
 
-                $.ajax({
-                    url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
-                    method: 'GET',
-                    data: { token: token },
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.success) {
-                            $('#full_name').val(data.data.name || '');
-                            $('#phone').val(data.data.sdt || '');
-                            updateButtonState();
-                        } else {
-                            showNotification(data.message || 'Không thể tải thông tin người dùng', 'danger');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.log('Lỗi tải thông tin người dùng:', xhr.status, error);
-                        showNotification('Lỗi kết nối server khi tải thông tin người dùng', 'danger');
-                    }
-                });
-            }
+    $.ajax({
+    url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
+    method: 'GET',
+    data: { token: token },
+    dataType: 'json',
+    success: function (data) {
+        if (data.success) {
+            $('#full_name').val(data.data.name || '');
+            $('#phone').val(data.data.sdt || '');
+            updateButtonState();
+        } else if (data.error_code === 'TOKEN_EXPIRED') {
+            // Trường hợp này bạn có thể để trống vì đã xử lý trong error chung
+        } else {
+            showNotification(data.message || 'Không thể tải thông tin người dùng', 'danger');
+        }
+    },
+    error: handleAjaxError
+});
+
+}
+
+function handleAjaxError(xhr, status, error) {
+    let message = 'Lỗi kết nối server. Vui lòng thử lại sau.';
+    
+    try {
+        const response = JSON.parse(xhr.responseText);
+        message = response.message || message;
+
+        // Nếu token hết hạn
+        if (response.error_code === 'TOKEN_EXPIRED') {
+            sessionStorage.removeItem('token');
+            showNotification(message, 'danger', 'login.php');
+            return;
+        }
+    } catch (e) {
+        console.error("Không thể parse JSON từ server:", xhr.responseText);
+    }
+
+    showNotification(message, 'error');
+    console.error('Lỗi kết nối server:', xhr.status, error, xhr.responseText);
+}
 
             // Kiểm tra tính hợp lệ của form
             function isFormValid() {
@@ -526,39 +549,6 @@
             function updateButtonState() {
                 $('#submitButton').prop('disabled', !isFormValid());
             }
-
-            // Hiển thị thông báo
-            function showNotification(message, type, redirectUrl = null) {
-                const modal = $('#notificationModal');
-                const content = $('#notificationContent');
-                const icon = $('#notificationIcon');
-                const messageEl = $('#notificationMessage');
-
-                content.removeClass('success danger warning').addClass(type);
-                icon.removeClass('fa-check-circle fa-exclamation-triangle fa-times-circle');
-                if (type === 'success') {
-                    icon.addClass('fa-check-circle');
-                } else if (type === 'danger') {
-                    icon.addClass('fa-times-circle');
-                } else if (type === 'warning') {
-                    icon.addClass('fa-exclamation-triangle');
-                }
-
-                messageEl.text(message);
-                modal.show();
-
-                if (redirectUrl) {
-                    setTimeout(() => {
-                        window.location.href = redirectUrl;
-                    }, 2000);
-                }
-            }
-
-            // Đóng thông báo
-            window.closeNotification = function () {
-                $('#notificationModal').hide();
-            };
-
             // Xử lý radio button
             $('input[name="datdv"]').change(function () {
                 const selected = $(this).val();
@@ -648,7 +638,7 @@
                     console.log('Dữ liệu JSON:', data);
 
                     if (data.success) {
-                        showNotification('Đặt dịch vụ thành công! Vui lòng chờ tài xế chấp nhận.', 'success', 'index.php');
+                        showNotification('Đặt dịch vụ thành công! Vui lòng chờ tài xế chấp nhận.', 'success', '../index.php');
                     } else {
                         showNotification(data.message || 'Lỗi không xác định từ server', 'danger');
                     }

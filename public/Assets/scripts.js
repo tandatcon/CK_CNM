@@ -34,3 +34,10 @@ function closeNotification() {
         window.location.href = redirectAfterClose;
     }
 }
+// async function checkToken() {
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         showNotification('Phiên đăng nhập đã hết, vui lòng đăng nhập lại', 'danger', '/WEB_ThueHoTroKhamBenh/login.php');
+//         return false;
+//     }
+// }

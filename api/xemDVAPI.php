@@ -1,10 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../includes/db_connect.php';
+require_once __DIR__ . '/../includes/jwt_config.php';
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
@@ -14,8 +12,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Lấy token từ URL
-$token = isset($_GET['token']) ? $_GET['token'] : '';
+// Nhận token từ URL
+$token = $_GET['token'] ?? '';
 
 if (empty($token)) {
     http_response_code(400);
@@ -23,20 +21,20 @@ if (empty($token)) {
     exit;
 }
 
+$secret_key = 'cabaymaublutopaz'; // Bạn nên lấy từ file config cho thống nhất
+
 try {
-    $secret_key = 'cabaymaublutopaz'; // Thay bằng khóa bí mật từ api/login.php
-    // Giải mã token
+    // Giải mã token và tự động kiểm tra thời gian hết hạn
     $decoded = JWT::decode($token, new Key($secret_key, 'HS256'));
 
-    // Kiểm tra role nếu cần
-    if ($decoded->role !== 0) { // Chỉ cho phép nếu là khách hàng
-        http_response_code(401);
-        echo json_encode(['success' => false, 'message' => 'Không phải khách hàng']);
+    // Kiểm tra vai trò
+    if (!isset($decoded->role) || $decoded->role !== 0) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Không có quyền truy cập']);
         exit;
     }
 
-
-    // Kết nối đến DB và lấy thông tin người dùng
+    // Truy vấn thông tin người dùng
     $conn = getDBConnection();
     $stmt = $conn->prepare("SELECT sdt, name FROM user WHERE id = :user_id");
     $stmt->execute(['user_id' => $decoded->user_id]);
@@ -49,18 +47,17 @@ try {
         echo json_encode(['success' => false, 'message' => 'Người dùng không tồn tại']);
     }
 
-}catch (ExpiredException $e) {
+} catch (ExpiredException $e) {
     http_response_code(401);
     echo json_encode([
         'success' => false,
         'message' => 'Phiên bản đăng nhập đã hết hạn. Vui lòng đăng nhập lại !',
         'error_code' => 'TOKEN_EXPIRED'
-    ]);}
- catch (Exception $e) {
+    ]);
+} catch (Exception $e) {
     http_response_code(500);
-    error_log('JWT Error: ' . $e->getMessage()); // Ghi log vào php_error_log
-    echo json_encode(['success' => false, 'message' => 'Token không hợp lệ hoặc lỗi server']);
+    // Chỉ hiển thị lỗi chi tiết trong môi trường dev
+    $msg = getenv('APP_ENV') === 'development' ? $e->getMessage() : 'Token không hợp lệ hoặc lỗi máy chủ';
+    error_log('JWT Error: ' . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => $msg]);
 }
-
-$conn = null;
-?>

@@ -29,8 +29,8 @@
         </div>
     </div>
     <script>
-        localStorage.removeItem('token');
-        localStorage.removeItem('full_name');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('full_name');
         showNotification('Đăng xuất thành công!', 'success', '../index.php');
     </script>
 </body>

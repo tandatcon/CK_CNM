@@ -11,7 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="Assets/scripts_auto.js"></script>
+    <script src="Assets/scripts.js"></script>
     <style>
         .header { position: sticky; top: 0; z-index: 50; background-color: white; }
         .login-container { max-width: 400px; margin: 20px auto; padding: 20px; background: #f7f7f7; border-radius: 8px; }
@@ -134,9 +134,9 @@
                 console.log('API response data:', data); // Debug
 
                 if (data.success) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('full_name', data.data.full_name);
-                    localStorage.setItem('role', data.data.role);
+                    sessionStorage.setItem('token', data.token);
+                    sessionStorage.setItem('full_name', data.data.full_name);
+                    sessionStorage.setItem('role', data.data.role);
                     showNotification(`Đăng nhập thành công! Chào ${data.data.full_name}`, 'success', data.data.role === '1' ? 'driver/orders.php' : '../index.php');
                 } else {
                     showNotification(data.message, 'danger ');

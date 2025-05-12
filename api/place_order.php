@@ -103,6 +103,7 @@ try {
     $sdt_ho = isset($input['guardian_phone']) ? trim($input['guardian_phone']) : '';
     $namsinh = $input['namsinh'];
     $gt = $input['gt'];
+    $trangthai ="0";
     // $namsinh = 'hello';
     // $gt = 'hello';
 
@@ -110,8 +111,8 @@ try {
     if ($quanhe_ho!=''){
         $stmt = $conn->prepare("
         INSERT INTO datho_dichvu (
-            id_nguoidatho,quanhe_ho,ten_ho,namsinh,gioitinh,sdt_ho,id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham) 
-            VALUES ( ?, ?, ?, ?,?,?,?,?,?,?,?)
+            id_nguoidatho,quanhe_ho,ten_ho,namsinh,gioitinh,sdt_ho,id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham,trangthai) 
+            VALUES ( ?, ?, ?, ?,?,?,?,?,?,?,?,?)
     ");
     
     $stmt->execute([
@@ -126,10 +127,11 @@ try {
         $appointment_date,
         $appointment_time,
         $condition,
+        $trangthai,
         ]);
     }else{
     $stmt = $conn->prepare("
-        INSERT INTO datdichvu (id_nguoikham,gt,namsinh,id_benhvien , diemhen, ngayhen, giohen, tinhtrang_nguoikham) VALUES (?,?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO datdichvu (id_nguoikham,gt,namsinh,id_benhvien , diemhen, ngayhen, giohen, tinhtrang_nguoikham,trangthai) VALUES (?,?, ?, ?, ?, ?, ?, ?,?)
     ");
     $stmt->execute([
         $user_id,
@@ -140,6 +142,7 @@ try {
         $appointment_date,
         $appointment_time,
         $condition,
+        $trangthai,
     ]);
     }
     

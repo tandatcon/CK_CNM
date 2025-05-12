@@ -4,10 +4,10 @@
         <span class="site-name">Đi cùng tôi</span>
     </div>
     <nav class="nav">
-        <a href="/WEB_ThueHoTroKhamBenh/public/index.php" class="nav-link">Trang chủ</a>
+        <a href="/WEB_ThueHoTroKhamBenh/index.php" class="nav-link">Trang chủ</a>
         <a href="#loiich" class="nav-link">Về chúng tôi</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/datDV.php" class="nav-link customer-link">Đặt dịch vụ</a>
-        <a href="/WEB_ThueHoTroKhamBenh/public/dichvucuaban.php" class="nav-link customer-link">Dịch vụ của bạn</a>
+        <a href="/WEB_ThueHoTroKhamBenh/public/xemDV.php" class="nav-link customer-link">Dịch vụ của bạn</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/driver/orders.php" class="nav-link driver-link" style="display: none;">Danh sách đơn</a>
         <a href="#dat" class="nav-link">Liên hệ</a>
         <span id="userName" class="nav-link" style="display: none;"></span>
@@ -18,9 +18,9 @@
 </header>
 <script>
     function checkLoginStatus() {
-        const token = localStorage.getItem('token');
-        const fullName = localStorage.getItem('full_name');
-        const role = localStorage.getItem('role');
+        const token = sessionStorage.getItem('token');
+        const fullName = sessionStorage.getItem('full_name');
+        const role = sessionStorage.getItem('role');
         const userNameElement = document.getElementById('userName');
         const loginLink = document.querySelector('.login-link');
         const registerLink = document.querySelector('.register-link');
@@ -53,3 +53,67 @@
 
     window.addEventListener('load', checkLoginStatus);
 </script>
+
+
+
+
+<style>
+    .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+        }
+
+        .notification-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 400px;
+            width: 90%;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .notification-content.success {
+            background: #4ade80;
+            color: white;
+        }
+
+        .notification-content.danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .notification-content.warning {
+            background: #facc15;
+            color: black;
+        }
+
+        .notification-content i {
+            margin-right: 8px;
+        }
+
+        .notification-content p {
+            margin: 10px 0;
+        }
+
+        .notification-content button {
+            padding: 8px 16px;
+            background: #fff;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .notification-content button:hover {
+            background: #e5e7eb;
+        }
+</style>
