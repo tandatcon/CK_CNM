@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,6 +230,7 @@
         }
     </style>
 </head>
+
 <body class="bg-white text-gray-800">
     <?php include("Assets/header.php"); ?>
     <div class="ct">
@@ -250,7 +252,8 @@
                     <div class="form-group">
                         <label for="phone">Số điện thoại của bạn:</label>
                         <input type="text" id="phone" placeholder="Số điện thoại" disabled>
-                        <div id="phone-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!</div>
+                        <div id="phone-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!
+                        </div>
                     </div>
                     <!-- Giới tính và năm sinh cho "Đặt cho bạn" -->
                     <div class="radio-group" id="an">
@@ -261,7 +264,8 @@
                     <div class="form-group" id="namsinh-container">
                         <label for="namsinh">Năm sinh:</label>
                         <input type="text" id="namsinh" placeholder="Ví dụ: 2000">
-                        <div id="namsinh-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!</div>
+                        <div id="namsinh-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!
+                        </div>
                     </div>
                     <!-- Thông tin người được đặt hộ -->
                     <div id="guardianInfo" style="display: none;">
@@ -283,12 +287,14 @@
                         <div class="form-group">
                             <label for="namsinh_guardian">Năm sinh:</label>
                             <input type="text" id="namsinh_guardian" placeholder="Ví dụ: 2000">
-                            <div id="namsinh_guardian-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!</div>
+                            <div id="namsinh_guardian-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900
+                                đến hiện tại!</div>
                         </div>
                         <div class="form-group">
                             <label for="sdt">Số điện thoại người được đặt hộ:</label>
                             <input type="text" id="sdt" placeholder="Số điện thoại">
-                            <div id="sdt-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!</div>
+                            <div id="sdt-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!
+                            </div>
                         </div>
                     </div>
                     <!-- Thông tin đặt lịch -->
@@ -303,7 +309,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="diemhen">Điểm hẹn:</label>
-                                <input type="text" id="diemhen" name="diemhen" placeholder="Điểm hẹn tại khu vực bệnh viện">
+                                <input type="text" id="diemhen" name="diemhen"
+                                    placeholder="Điểm hẹn tại khu vực bệnh viện">
                                 <div id="diemhen-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
@@ -318,12 +325,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="condition">Tình trạng sức khỏe:</label>
-                                <textarea id="condition" name="condition" rows="4" placeholder="Mô tả tình trạng sức khỏe của bệnh nhân..." required></textarea>
+                                <textarea id="condition" name="condition" rows="4"
+                                    placeholder="Mô tả tình trạng sức khỏe của bệnh nhân..." required></textarea>
                                 <div id="condition-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
                                 <label for="gia"></label>
-                                <input type="text" id="gia" name="gia" placeholder="Giá dịch vụ: từ 23.000VNĐ/Giờ" disabled>
+                                <input type="text" id="gia" name="gia" placeholder="Giá dịch vụ: từ 23.000VNĐ/Giờ"
+                                    disabled>
                             </div>
                             <button type="submit" id="submitButton">Đặt lịch</button>
                         </div>
@@ -331,11 +340,13 @@
                         <div class="booking-info-card">
                             <p class="section-title">Lưu ý quan trọng!</p>
                             <ol class="info-list">
-                                <li>Dịch vụ chỉ áp dụng tại bệnh viện. Bạn và nhân viên sẽ gặp nhau tại bệnh viện theo giờ đã đặt.</li>
+                                <li>Dịch vụ chỉ áp dụng tại bệnh viện. Bạn và nhân viên sẽ gặp nhau tại bệnh viện theo
+                                    giờ đã đặt.</li>
                             </ol>
                             <p class="section-title">Hướng dẫn đặt dịch vụ</p>
                             <ol class="info-list">
-                                <li>Khi chọn <strong>"Đặt hộ người khác"</strong>, cần điền đúng thông tin <strong>"Người được đặt hộ"</strong>.</li>
+                                <li>Khi chọn <strong>"Đặt hộ người khác"</strong>, cần điền đúng thông tin
+                                    <strong>"Người được đặt hộ"</strong>.</li>
                                 <li>Chọn đúng bệnh viện bạn muốn đến khám.</li>
                                 <li>Địa điểm hẹn là khu vực cụ thể tại bệnh viện (ví dụ: cổng 1, cổng 2...).</li>
                                 <li>Ngày khám phải sau ngày hôm nay ít nhất <strong>1 ngày</strong>.</li>
@@ -362,8 +373,11 @@
         </div>
     </div>
     <?php include("Assets/footer.php"); ?>
+    <?php $a = "<script>const token = sessionStorage.getItem('token');</script>";
+echo 'HiHa'. $a;
+?>
     <script>
-        
+
 
         $(document).ready(function () {
             // Kiểm tra đăng nhập
@@ -406,50 +420,50 @@
 
             // Lấy thông tin người dùng
             function loadUserInfo() {
-    const token = sessionStorage.getItem('token');  // Hoặc sử dụng localStorage.getItem('token')
-    if (!token) return;
+                const token = sessionStorage.getItem('token');  // Hoặc sử dụng localStorage.getItem('token')
+                if (!token) return;
 
-    $.ajax({
-    url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
-    method: 'GET',
-    data: { token: token },
-    dataType: 'json',
-    success: function (data) {
-        if (data.success) {
-            $('#full_name').val(data.data.name || '');
-            $('#phone').val(data.data.sdt || '');
-            updateButtonState();
-        } else if (data.error_code === 'TOKEN_EXPIRED') {
-            // Trường hợp này bạn có thể để trống vì đã xử lý trong error chung
-        } else {
-            showNotification(data.message || 'Không thể tải thông tin người dùng', 'danger');
-        }
-    },
-    error: handleAjaxError
-});
+                $.ajax({
+                    url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
+                    method: 'GET',
+                    data: { token: token },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            $('#full_name').val(data.data.name || '');
+                            $('#phone').val(data.data.sdt || '');
+                            updateButtonState();
+                        } else if (data.error_code === 'TOKEN_EXPIRED') {
+                            // Trường hợp này bạn có thể để trống vì đã xử lý trong error chung
+                        } else {
+                            showNotification(data.message || 'Không thể tải thông tin người dùng', 'danger');
+                        }
+                    },
+                    error: handleAjaxError
+                });
 
-}
+            }
 
-function handleAjaxError(xhr, status, error) {
-    let message = 'Lỗi kết nối server. Vui lòng thử lại sau.';
-    
-    try {
-        const response = JSON.parse(xhr.responseText);
-        message = response.message || message;
+            function handleAjaxError(xhr, status, error) {
+                let message = 'Lỗi kết nối server. Vui lòng thử lại sau.';
 
-        // Nếu token hết hạn
-        if (response.error_code === 'TOKEN_EXPIRED') {
-            sessionStorage.removeItem('token');
-            showNotification(message, 'danger', 'login.php');
-            return;
-        }
-    } catch (e) {
-        console.error("Không thể parse JSON từ server:", xhr.responseText);
-    }
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    message = response.message || message;
 
-    showNotification(message, 'error');
-    console.error('Lỗi kết nối server:', xhr.status, error, xhr.responseText);
-}
+                    // Nếu token hết hạn
+                    if (response.error_code === 'TOKEN_EXPIRED') {
+                        sessionStorage.removeItem('token');
+                        showNotification(message, 'danger', 'login.php');
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Không thể parse JSON từ server:", xhr.responseText);
+                }
+
+                showNotification(message, 'error');
+                console.error('Lỗi kết nối server:', xhr.status, error, xhr.responseText);
+            }
 
             // Kiểm tra tính hợp lệ của form
             function isFormValid() {
@@ -466,7 +480,6 @@ function handleAjaxError(xhr, status, error) {
                 const sdt = $('#sdt').val().trim();
                 const namsinh = datdv === 'ban' ? $('#namsinh').val().trim() : $('#namsinh_guardian').val().trim();
                 const gt = $('input[name="gt"]:checked').val();
-
                 const phoneRegex = /^0\d{9}$/;
                 const yearRegex = /^\d{4}$/;
                 const currentYear = new Date().getFullYear();
@@ -593,7 +606,7 @@ function handleAjaxError(xhr, status, error) {
                 const appointment_date = $('#date').val();
                 const appointment_time = $('#time').val();
                 const condition = $('#condition').val().trim();
-                const token = localStorage.getItem('token');
+                const token = sessionStorage.getItem('token');
                 const datdv = $('input[name="datdv"]:checked').val();
                 const guardian_relation = $('#quanhe').val().trim();
                 const guardian_name = $('#ten').val().trim();
@@ -662,4 +675,5 @@ function handleAjaxError(xhr, status, error) {
         });
     </script>
 </body>
+
 </html>

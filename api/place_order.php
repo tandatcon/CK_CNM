@@ -3,8 +3,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../includes/db_connect.php';
+require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../includes/db_connect.php';
+require_once __DIR__ . '/../includes/jwt_config.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -110,8 +112,8 @@ try {
     // Lưu vào bảng orders
     if ($quanhe_ho!=''){
         $stmt = $conn->prepare("
-        INSERT INTO datho_dichvu (
-            id_nguoidatho,quanhe_ho,ten_ho,namsinh,gioitinh,sdt_ho,id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham,trangthai) 
+        INSERT INTO datdichvu (
+            id_nguoikham,quanhe_ho,ten_ho,namsinh,gt,sdt_ho,id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham,trangthai) 
             VALUES ( ?, ?, ?, ?,?,?,?,?,?,?,?,?)
     ");
     

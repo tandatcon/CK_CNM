@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/jwt_config.php';
@@ -22,10 +21,10 @@ if (empty($token)) {
     exit;
 }
 
-$secret_key = 'cabaymaublutopaz'; // Bạn nên lấy từ file config cho thống nhất
+$secret_key = 'cabaymaublutopaz'; // Nên lấy từ jwt_config.php
 
 try {
-    // Giải mã token và tự động kiểm tra thời gian hết hạn
+    // Giải mã token
     $decoded = JWT::decode($token, new Key($secret_key, 'HS256'));
 
     // Kiểm tra vai trò
@@ -35,35 +34,34 @@ try {
         exit;
     }
 
-    // Truy vấn thông tin người dùng
+    // Truy vấn danh sách đơn hoàn tất (trangthai = 4)
     $conn = getDBConnection();
-    $stmt = $conn->prepare("SELECT a.id, a.id_nguoikham, a.namsinh, a.gt, a.id_benhvien, b.ten_benhvien, 
-    a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai, a.loai,a.quanhe_ho, a.ten_ho, a.sdt_ho
-    FROM datdichvu a 
-    JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
-    WHERE a.id_nguoikham = :user_id AND a.trangthai IN (0,1,2,3)");
-    $stmt->execute(['user_id' => $decoded->user_id]);
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC); // <-- Lấy nhiều dòng
+    $stmt = $conn->prepare("
+        SELECT a.id, a.id_nguoikham, a.namsinh, a.gt, a.id_benhvien, b.ten_benhvien, 
+               a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai
+        FROM datdichvu a 
+        JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
+        WHERE a.id_nguoikham = :user_id AND a.trangthai = :trangthai
+    ");
+    $stmt->execute(['user_id' => $decoded->user_id, 'trangthai' => 4]);
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($orders && count($orders) > 0) {
         echo json_encode(['success' => true, 'data' => $orders]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Không có đơn đặt dịch vụ nào']);
+        echo json_encode(['success' => false, 'message' => 'Không có đơn dịch vụ đã hoàn tất']);
     }
-
-
 
 } catch (ExpiredException $e) {
     http_response_code(401);
     echo json_encode([
         'success' => false,
-        'message' => 'Phiên bản đăng nhập đã hết hạn. Vui lòng đăng nhập lại !',
+        'message' => 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!',
         'error_code' => 'TOKEN_EXPIRED'
     ]);
 } catch (Exception $e) {
     http_response_code(500);
-    // Chỉ hiển thị lỗi chi tiết trong môi trường dev
     $msg = getenv('APP_ENV') === 'development' ? $e->getMessage() : 'Token không hợp lệ hoặc lỗi máy chủ';
     error_log('JWT Error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => $msg]);
