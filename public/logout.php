@@ -9,15 +9,56 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="Assets/scripts_auto.js?v=3"></script>
     <style>
-        .notification-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; }
-        .notification-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 400px; width: 90%; padding: 20px; border-radius: 8px; text-align: center; }
-        .notification-content.success { background: #4ade80; color: white; }
-        .notification-content.error { background: #ef4444; color: white; }
-        .notification-content.warning { background: #facc15; color: black; }
-        .notification-content i { margin-right: 8px; }
-        .notification-content p { margin: 10px 0; }
-        .notification-content button { padding: 8px 16px; background: #fff; color: #333; border: none; border-radius: 4px; cursor: pointer; }
-        .notification-content button:hover { background: #e5e7eb; }
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+        }
+        .notification-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 400px;
+            width: 90%;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .notification-content.success {
+            background: #4ade80;
+            color: white;
+        }
+        .notification-content.error {
+            background: #ef4444;
+            color: white;
+        }
+        .notification-content.warning {
+            background: #facc15;
+            color: black;
+        }
+        .notification-content i {
+            margin-right: 8px;
+        }
+        .notification-content p {
+            margin: 10px 0;
+        }
+        .notification-content button {
+            padding: 8px 16px;
+            background: #fff;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .notification-content button:hover {
+            background: #e5e7eb;
+        }
     </style>
 </head>
 <body>
@@ -29,9 +70,24 @@
         </div>
     </div>
     <script>
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('full_name');
-        showNotification('Đăng xuất thành công!', 'success', '../index.php');
+        // Gọi API để đăng xuất
+        fetch('http://localhost/WEB_ThueHoTroKhamBenh/api/logout.php', {
+    method: 'POST',
+    credentials: 'include' // Gửi kèm cookie
+})
+.then(res => res.json())
+.then(data => {
+    if (data.success) {
+        // Xoá sessionStorage nếu có
+        showNotification(data.message, 'success', '../index.php');
+    } else {
+        showNotification(data.message, 'danger', '../index.php');
+    }
+})
+.catch(err => {
+    console.error('Lỗi khi gọi API đăng xuất:', err);
+});
+
     </script>
 </body>
 </html>

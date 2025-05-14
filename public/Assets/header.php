@@ -18,27 +18,28 @@
 </header>
 <script>
     function checkLoginStatus() {
-        const token = sessionStorage.getItem('token');
-        const fullName = sessionStorage.getItem('full_name');
-        const role = sessionStorage.getItem('role');
-        const userNameElement = document.getElementById('userName');
-        const loginLink = document.querySelector('.login-link');
-        const registerLink = document.querySelector('.register-link');
-        const logoutLink = document.querySelector('.logout-link');
-        const customerLink = document.querySelector('.customer-link');
-        const driverLink = document.querySelector('.driver-link');
+    const userNameElement = document.getElementById('userName');
+    const loginLink = document.querySelector('.login-link');
+    const registerLink = document.querySelector('.register-link');
+    const logoutLink = document.querySelector('.logout-link');
+    const customerLinks = document.querySelectorAll('.customer-link'); // Chọn tất cả customer-link
+    const driverLink = document.querySelector('.driver-link');
 
-        if (token && fullName) {
-            userNameElement.textContent = `Xin chào ${fullName}`;
+    // Hàm cập nhật giao diện header
+    function updateHeader(user) {
+        if (user) {
+            // Thoát ký tự tên để chống XSS
+            const safeName = user.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            userNameElement.textContent = `Xin chào ${safeName}`;
             userNameElement.style.display = 'inline';
             loginLink.style.display = 'none';
             registerLink.style.display = 'none';
             logoutLink.style.display = 'inline';
-            if (role === '0') {
-                customerLink.style.display = 'inline';
+            if (user.role === 0) {
+                customerLinks.forEach(link => link.style.display = 'inline');
                 driverLink.style.display = 'none';
-            } else if (role === '1') {
-                customerLink.style.display = 'none';
+            } else if (user.role === 1) {
+                customerLinks.forEach(link => link.style.display = 'none');
                 driverLink.style.display = 'inline';
             }
         } else {
@@ -46,12 +47,75 @@
             loginLink.style.display = 'inline';
             registerLink.style.display = 'inline';
             logoutLink.style.display = 'none';
-            customerLink.style.display = 'inline';
+            customerLinks.forEach(link => link.style.display = 'inline');
             driverLink.style.display = 'none';
         }
     }
 
-    window.addEventListener('load', checkLoginStatus);
+    // Gọi API để kiểm tra đăng nhập
+    $.ajax({
+        url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
+        method: 'GET',
+        dataType: 'json',
+        xhrFields: { withCredentials: true },
+        success: function (data) {
+            if (data.success) {
+                updateHeader(data.data);
+            } else {
+                updateHeader(null);
+            }
+        },
+        error: function (xhr) {
+            let message = 'Lỗi kết nối server';
+            try {
+                const response = JSON.parse(xhr.responseText);
+                message = response.message || message;
+                if (response.error_code === 'TOKEN_EXPIRED') {
+                    // Làm mới token
+                    $.ajax({
+                        url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/refresh_token.php',
+                        method: 'POST',
+                        dataType: 'json',
+                        xhrFields: { withCredentials: true },
+                        success: function (refreshData) {
+                            if (refreshData.success) {
+                                // Thử lại get_user_info
+                                $.ajax({
+                                    url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
+                                    method: 'GET',
+                                    dataType: 'json',
+                                    xhrFields: { withCredentials: true },
+                                    success: function (retryData) {
+                                        if (retryData.success) {
+                                            updateHeader(retryData.data);
+                                        } else {
+                                            updateHeader(null);
+                                        }
+                                    },
+                                    error: function () {
+                                        updateHeader(null);
+                                    }
+                                });
+                            } else {
+                                updateHeader(null);
+                            }
+                        },
+                        error: function () {
+                            updateHeader(null);
+                        }
+                    });
+                } else {
+                    updateHeader(null);
+                }
+            } catch (e) {
+                console.error('Không thể parse JSON:', xhr.responseText);
+                updateHeader(null);
+            }
+        }
+    });
+}
+
+window.addEventListener('load', checkLoginStatus);
 </script>
 
 

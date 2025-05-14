@@ -191,7 +191,7 @@ $(document).ready(function () {
                 } catch (e) {
                     console.error('Failed to parse JSON:', xhr.responseText);
                 }
-                showNotification(message, 'error');
+                showNotification(message, 'danger','../index.php');
                 $('#orderList').html('<p class="text-sm text-gray-600">Lỗi tải đơn hàng. Vui lòng thử lại.</p>');
             }
         });

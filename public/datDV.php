@@ -227,6 +227,12 @@
             margin-right: 1rem;
             font-weight: normal;
             color: #333;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .radio-group i {
+            margin-right: 6px;
         }
     </style>
 </head>
@@ -235,15 +241,15 @@
     <?php include("Assets/header.php"); ?>
     <div class="ct">
         <div class="br" id="ct" style="display: none;">
-            <!-- Radio buttons chọn loại đặt dịch vụ -->
             <div class="radio-group">
-                <label><input type="radio" name="datdv" value="ban" checked> Đặt cho bạn</label>
-                <label><input type="radio" name="datdv" value="nguoi_khac"> Đặt hộ người khác</label>
+                <label><i class="fas fa-user"></i><input type="radio" name="datdv" value="ban" checked> Đặt cho
+                    bạn</label>
+                <label><i class="fas fa-user-friends"></i><input type="radio" name="datdv" value="nguoi_khac"> Đặt hộ
+                    người khác</label>
             </div>
             <div id="formContainer">
                 <h2 id="formTitle"><b>ĐẶT DỊCH VỤ CHO BẠN</b></h2>
                 <form id="bookingForm" onsubmit="return handleBooking(event)">
-                    <!-- Thông tin người đặt -->
                     <div class="form-group">
                         <label for="full_name">Họ và Tên của bạn:</label>
                         <input type="text" id="full_name" placeholder="Họ tên của bạn" disabled>
@@ -255,7 +261,6 @@
                         <div id="phone-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!
                         </div>
                     </div>
-                    <!-- Giới tính và năm sinh cho "Đặt cho bạn" -->
                     <div class="radio-group" id="an">
                         <label style="font-weight: bold; color: #333;">Giới tính:</label>
                         <label><input type="radio" name="gt" value="0" checked> Nam</label>
@@ -267,7 +272,6 @@
                         <div id="namsinh-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!
                         </div>
                     </div>
-                    <!-- Thông tin người được đặt hộ -->
                     <div id="guardianInfo" style="display: none;">
                         <div class="form-group">
                             <label for="quanhe">Quan hệ với người được đặt hộ:</label>
@@ -297,7 +301,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Thông tin đặt lịch -->
                     <section class="booking-section" style="display: flex; gap: 2rem; padding: 2rem;">
                         <div class="booking-form-container" style="flex: 1;">
                             <div class="form-group">
@@ -336,7 +339,6 @@
                             </div>
                             <button type="submit" id="submitButton">Đặt lịch</button>
                         </div>
-                        <!-- Thông tin hướng dẫn -->
                         <div class="booking-info-card">
                             <p class="section-title">Lưu ý quan trọng!</p>
                             <ol class="info-list">
@@ -346,7 +348,8 @@
                             <p class="section-title">Hướng dẫn đặt dịch vụ</p>
                             <ol class="info-list">
                                 <li>Khi chọn <strong>"Đặt hộ người khác"</strong>, cần điền đúng thông tin
-                                    <strong>"Người được đặt hộ"</strong>.</li>
+                                    <strong>"Người được đặt hộ"</strong>.
+                                </li>
                                 <li>Chọn đúng bệnh viện bạn muốn đến khám.</li>
                                 <li>Địa điểm hẹn là khu vực cụ thể tại bệnh viện (ví dụ: cổng 1, cổng 2...).</li>
                                 <li>Ngày khám phải sau ngày hôm nay ít nhất <strong>1 ngày</strong>.</li>
@@ -364,7 +367,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal thông báo -->
     <div class="notification-modal" id="notificationModal">
         <div class="notification-content" id="notificationContent">
             <i id="notificationIcon"></i>
@@ -373,27 +375,20 @@
         </div>
     </div>
     <?php include("Assets/footer.php"); ?>
-    <?php $a = "<script>const token = sessionStorage.getItem('token');</script>";
-echo 'HiHa'. $a;
-?>
     <script>
-
-
         $(document).ready(function () {
-            // Kiểm tra đăng nhập
             function checkLogin() {
-                const token = sessionStorage.getItem('token');
+
                 const role = sessionStorage.getItem('role');
                 const mainContent = document.getElementById('ct');
-                if (!token || role !== '0') {
-                    showNotification('Vui lòng đăng nhập để đặt dịch vụ!', 'warning', 'login.php');
-                    return false;
-                }
+                // if (role !== '0') {
+                //     showNotification('Bạn không có quyền truy cập vào trang này!', 'danger', '../index.php');
+                //     return false;
+                // }
                 if (mainContent) mainContent.style.display = 'block';
                 return true;
             }
 
-            // Tải danh sách bệnh viện
             function loadHospitals() {
                 $.ajax({
                     url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_hospitals.php',
@@ -418,54 +413,41 @@ echo 'HiHa'. $a;
                 });
             }
 
-            // Lấy thông tin người dùng
             function loadUserInfo() {
-                const token = sessionStorage.getItem('token');  // Hoặc sử dụng localStorage.getItem('token')
-                if (!token) return;
-
                 $.ajax({
                     url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
                     method: 'GET',
-                    data: { token: token },
+                    xhrFields: {
+                        withCredentials: true // QUAN TRỌNG: để gửi cookie
+                    },
                     dataType: 'json',
                     success: function (data) {
                         if (data.success) {
                             $('#full_name').val(data.data.name || '');
                             $('#phone').val(data.data.sdt || '');
                             updateButtonState();
-                        } else if (data.error_code === 'TOKEN_EXPIRED') {
-                            // Trường hợp này bạn có thể để trống vì đã xử lý trong error chung
                         } else {
                             showNotification(data.message || 'Không thể tải thông tin người dùng', 'danger');
                         }
                     },
-                    error: handleAjaxError
-                });
-
-            }
-
-            function handleAjaxError(xhr, status, error) {
-                let message = 'Lỗi kết nối server. Vui lòng thử lại sau.';
-
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    message = response.message || message;
-
-                    // Nếu token hết hạn
-                    if (response.error_code === 'TOKEN_EXPIRED') {
-                        sessionStorage.removeItem('token');
-                        showNotification(message, 'danger', 'login.php');
-                        return;
+                    error: function (xhr, status, error) {
+                        let message = 'Lỗi kết nối server. Vui lòng thử lại sau.';
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            message = response.message || message;
+                            if (response.error_code === 'TOKEN_EXPIRED') {
+                                showNotification(message, 'danger', 'login.php');
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('Không thể parse JSON:', xhr.responseText);
+                        }
+                        showNotification(message, 'error');
                     }
-                } catch (e) {
-                    console.error("Không thể parse JSON từ server:", xhr.responseText);
-                }
-
-                showNotification(message, 'error');
-                console.error('Lỗi kết nối server:', xhr.status, error, xhr.responseText);
+                });
             }
 
-            // Kiểm tra tính hợp lệ của form
+
             function isFormValid() {
                 const full_name = $('#full_name').val().trim();
                 const phone = $('#phone').val().trim();
@@ -485,11 +467,9 @@ echo 'HiHa'. $a;
                 const currentYear = new Date().getFullYear();
                 let isValid = true;
 
-                // Reset lỗi
                 $('.error-message').removeClass('visible');
                 $('.form-group input, .form-group select, .form-group textarea').removeClass('input-invalid');
 
-                // Kiểm tra các trường bắt buộc
                 if (!full_name) {
                     $('#full_name-error').addClass('visible');
                     $('#full_name').addClass('input-invalid');
@@ -535,8 +515,6 @@ echo 'HiHa'. $a;
                     }
                     isValid = false;
                 }
-
-                // Kiểm tra khi chọn "Đặt hộ người khác"
                 if (datdv === 'nguoi_khac') {
                     if (!quanhe) {
                         $('#quanhe-error').addClass('visible');
@@ -554,15 +532,13 @@ echo 'HiHa'. $a;
                         isValid = false;
                     }
                 }
-
                 return isValid;
             }
 
-            // Cập nhật trạng thái nút
             function updateButtonState() {
                 $('#submitButton').prop('disabled', !isFormValid());
             }
-            // Xử lý radio button
+
             $('input[name="datdv"]').change(function () {
                 const selected = $(this).val();
                 if (selected === 'ban') {
@@ -583,10 +559,8 @@ echo 'HiHa'. $a;
                 updateButtonState();
             });
 
-            // Gắn sự kiện input để cập nhật trạng thái nút
             $('#full_name, #phone, #hospital, #diemhen, #date, #time, #condition, #quanhe, #ten, #sdt, #namsinh, #namsinh_guardian').on('input change', updateButtonState);
 
-            // Xử lý form đặt lịch
             window.handleBooking = async function (event) {
                 event.preventDefault();
                 if (!checkLogin()) return false;
@@ -598,7 +572,6 @@ echo 'HiHa'. $a;
 
                 const button = $('#submitButton');
                 button.prop('disabled', true).text('Đang xử lý...');
-
                 const full_name = $('#full_name').val().trim();
                 const phone = $('#phone').val().trim();
                 const hospital_id = $('#hospital').val();
@@ -608,32 +581,29 @@ echo 'HiHa'. $a;
                 const condition = $('#condition').val().trim();
                 const token = sessionStorage.getItem('token');
                 const datdv = $('input[name="datdv"]:checked').val();
-                const guardian_relation = $('#quanhe').val().trim();
-                const guardian_name = $('#ten').val().trim();
-                const guardian_phone = $('#sdt').val().trim();
+                const loai = datdv === 'ban' ? '0' : '1';
+                const quanhe = $('#quanhe').val().trim();
+                const ten = $('#ten').val().trim();
+                const sdt = $('#sdt').val().trim();
                 const namsinh = datdv === 'ban' ? $('#namsinh').val().trim() : $('#namsinh_guardian').val().trim();
                 const gt = $('input[name="gt"]:checked').val();
-
-                if (!token) {
-                    showNotification('Vui lòng đăng nhập để đặt dịch vụ!', 'warning', 'login.php');
-                    button.prop('disabled', !isFormValid()).text('Đặt lịch');
-                    return false;
-                }
 
                 const payload = {
                     full_name,
                     phone,
-                    diemhen,
-                    namsinh,
-                    gt,
+                    sdt,
+                    token,
                     hospital_id,
+                    diemhen,
                     appointment_date,
                     appointment_time,
                     condition,
-                    token,
-                    guardian_relation: datdv === 'nguoi_khac' ? guardian_relation : '',
-                    guardian_name: datdv === 'nguoi_khac' ? guardian_name : '',
-                    guardian_phone: datdv === 'nguoi_khac' ? guardian_phone : ''
+                    loai,
+                    namsinh,
+                    gt,
+                    guardian_relation: datdv === 'nguoi_khac' ? quanhe : '',
+                    guardian_name: datdv === 'nguoi_khac' ? ten : '',
+                    guardian_phone: datdv === 'nguoi_khac' ? sdt : ''
                 };
                 console.log('Payload gửi đi:', payload);
 
@@ -643,29 +613,42 @@ echo 'HiHa'. $a;
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-                    console.log('Phản hồi từ server:', response.status, response.statusText);
-                    if (!response.ok) {
-                        throw new Error(`Lỗi HTTP: ${response.status} ${response.statusText}`);
-                    }
-                    const data = await response.json();
-                    console.log('Dữ liệu JSON:', data);
 
-                    if (data.success) {
-                        showNotification('Đặt dịch vụ thành công! Vui lòng chờ tài xế chấp nhận.', 'success', '../index.php');
-                    } else {
-                        showNotification(data.message || 'Lỗi không xác định từ server', 'danger');
+                    const responseText = await response.text();
+                    console.log('AJAX Response:', response.status, response.statusText, responseText);
+
+                    let message = 'Lỗi kết nối server. Vui lòng thử lại sau.';
+                    try {
+                        const data = JSON.parse(responseText);
+                        console.log('Parsed Response:', data);
+                        message = data.message || message;
+
+                        if (data.error_code === 'TOKEN_EXPIRED') {
+                            console.warn('Token expired, clearing sessionStorage');
+                            sessionStorage.removeItem('token');
+                            showNotification(message, 'danger', 'login.php');
+                            return false;
+                        }
+
+                        if (!response.ok || !data.success) {
+                            showNotification(message, 'danger');
+                            return false;
+                        }
+
+                        showNotification('Đặt dịch vụ thành công! Vui lòng chờ xác nhận.', 'success', 'xemDV.php');
+                    } catch (parseError) {
+                        console.error('Failed to parse JSON:', responseText);
+                        showNotification('Lỗi máy chủ không phản hồi đúng định dạng.', 'danger');
                     }
                 } catch (error) {
-                    console.log('Lỗi chi tiết:', error);
+                    console.error('Fetch Error:', error);
                     showNotification(`Lỗi kết nối máy chủ: ${error.message}`, 'danger');
                 } finally {
                     button.prop('disabled', !isFormValid()).text('Đặt lịch');
                 }
-
                 return false;
             };
 
-            // Khởi tạo
             if (checkLogin()) {
                 loadHospitals();
                 if ($('input[name="datdv"]:checked').val() === 'ban') {

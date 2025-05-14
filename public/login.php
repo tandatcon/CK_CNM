@@ -134,16 +134,14 @@
                 console.log('API response data:', data); // Debug
 
                 if (data.success) {
-                    sessionStorage.setItem('token', data.token);
-                    sessionStorage.setItem('full_name', data.data.full_name);
-                    sessionStorage.setItem('role', data.data.role);
-                    showNotification(`Đăng nhập thành công! Chào ${data.data.full_name}`, 'success', data.data.role === '1' ? 'driver/orders.php' : '../index.php');
+                    
+                    showNotification(`Đăng nhập thành công! Chào ${data.data.full_name}`, 'success', '../index.php');
                 } else {
-                    showNotification(data.message, 'danger ');
+                    showNotification(data.message, 'danger');
                 }
             } catch (error) {
                 console.error('Lỗi kết nối API:', error); // Debug
-                showNotification('Lỗi kết nối máy chủ. Vui lòng thử lại sau.', 'danger ');
+                showNotification('Lỗi kết nối máy chủ. Vui lòng thử lại sau.', 'danger');
             }
 
             return false;

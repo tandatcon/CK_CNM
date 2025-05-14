@@ -10,18 +10,21 @@ use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Origin: http://localhost'); // Điều chỉnh đúng origin
+header('Access-Control-Allow-Credentials: true'); // Cho phép gửi cookie
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
 
-// Lấy token từ URL
-$token = isset($_GET['token']) ? $_GET['token'] : '';
+
+// Lấy token từ cookie
+$token = isset($_COOKIE['access_token']) ? $_COOKIE['access_token'] : '';
 
 if (empty($token)) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Thiếu token']);
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Chưa đăng nhập hoặc thiếu toke : trang user']);
     exit;
 }
+
 
 try {
     $secret_key = 'cabaymaublutopaz'; // Thay bằng khóa bí mật từ api/login.php
