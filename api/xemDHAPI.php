@@ -126,7 +126,7 @@ try {
     }
 
     // Kiểm tra vai trò
-    if (!isset($decoded->role) || $decoded->role !== 0) { // Sửa !== thành != vì role là string trong JWT
+    if (!isset($decoded->role) || $decoded->role !== 1) { // Sửa !== thành != vì role là string trong JWT
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Không có quyền truy cập', 'error_code' => 'FORBIDDEN']);
         exit;
@@ -137,7 +137,7 @@ try {
         a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai, a.loai, a.quanhe_ho, a.ten_ho, a.sdt_ho
         FROM datdichvu a 
         JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
-        WHERE a.id_nguoikham = :user_id AND a.trangthai IN (0,1,2,3)");
+        WHERE a.id_nhanvien = :user_id AND a.trangthai IN (1,2)");
     $stmt->execute(['user_id' => $decoded->user_id]);
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

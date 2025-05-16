@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt Dịch Vụ - Đi cùng tôi</title>
-    <link rel="stylesheet" href="Assets/styles.css?v=3">
+    <link rel="stylesheet" href="Assets/styles.css?v=4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
@@ -39,64 +39,7 @@
             height: auto;
         }
 
-        .notification-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 10000;
-        }
-
-        .notification-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 400px;
-            width: 90%;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .notification-content.success {
-            background: #4ade80;
-            color: white;
-        }
-
-        .notification-content.danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .notification-content.warning {
-            background: #facc15;
-            color: black;
-        }
-
-        .notification-content i {
-            margin-right: 8px;
-        }
-
-        .notification-content p {
-            margin: 10px 0;
-        }
-
-        .notification-content button {
-            padding: 8px 16px;
-            background: #fff;
-            color: #333;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .notification-content button:hover {
-            background: #e5e7eb;
-        }
+        
 
         .booking-info-card {
             flex: 1;
@@ -240,12 +183,10 @@
 <body class="bg-white text-gray-800">
     <?php include("Assets/header.php"); ?>
     <div class="ct">
-        <div class="br" id="ct" style="display: none;">
+        <div class="br" id="ct">
             <div class="radio-group">
-                <label><i class="fas fa-user"></i><input type="radio" name="datdv" value="ban" checked> Đặt cho
-                    bạn</label>
-                <label><i class="fas fa-user-friends"></i><input type="radio" name="datdv" value="nguoi_khac"> Đặt hộ
-                    người khác</label>
+                <label><i class="fas fa-user"></i><input type="radio" name="datdv" value="ban" checked> Đặt cho bạn</label>
+                <label><i class="fas fa-user-friends"></i><input type="radio" name="datdv" value="nguoi_khac"> Đặt hộ người khác</label>
             </div>
             <div id="formContainer">
                 <h2 id="formTitle"><b>ĐẶT DỊCH VỤ CHO BẠN</b></h2>
@@ -258,8 +199,7 @@
                     <div class="form-group">
                         <label for="phone">Số điện thoại của bạn:</label>
                         <input type="text" id="phone" placeholder="Số điện thoại" disabled>
-                        <div id="phone-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!
-                        </div>
+                        <div id="phone-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!</div>
                     </div>
                     <div class="radio-group" id="an">
                         <label style="font-weight: bold; color: #333;">Giới tính:</label>
@@ -269,8 +209,7 @@
                     <div class="form-group" id="namsinh-container">
                         <label for="namsinh">Năm sinh:</label>
                         <input type="text" id="namsinh" placeholder="Ví dụ: 2000">
-                        <div id="namsinh-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!
-                        </div>
+                        <div id="namsinh-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!</div>
                     </div>
                     <div id="guardianInfo" style="display: none;">
                         <div class="form-group">
@@ -291,14 +230,12 @@
                         <div class="form-group">
                             <label for="namsinh_guardian">Năm sinh:</label>
                             <input type="text" id="namsinh_guardian" placeholder="Ví dụ: 2000">
-                            <div id="namsinh_guardian-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900
-                                đến hiện tại!</div>
+                            <div id="namsinh_guardian-error" class="error-message">Năm sinh phải là số 4 chữ số từ 1900 đến hiện tại!</div>
                         </div>
                         <div class="form-group">
                             <label for="sdt">Số điện thoại người được đặt hộ:</label>
                             <input type="text" id="sdt" placeholder="Số điện thoại">
-                            <div id="sdt-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!
-                            </div>
+                            <div id="sdt-error" class="error-message">Số điện thoại phải gồm 10 số, bắt đầu bằng "0"!</div>
                         </div>
                     </div>
                     <section class="booking-section" style="display: flex; gap: 2rem; padding: 2rem;">
@@ -312,8 +249,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="diemhen">Điểm hẹn:</label>
-                                <input type="text" id="diemhen" name="diemhen"
-                                    placeholder="Điểm hẹn tại khu vực bệnh viện">
+                                <input type="text" id="diemhen" name="diemhen" placeholder="Điểm hẹn tại khu vực bệnh viện">
                                 <div id="diemhen-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
@@ -328,28 +264,23 @@
                             </div>
                             <div class="form-group">
                                 <label for="condition">Tình trạng sức khỏe:</label>
-                                <textarea id="condition" name="condition" rows="4"
-                                    placeholder="Mô tả tình trạng sức khỏe của bệnh nhân..." required></textarea>
+                                <textarea id="condition" name="condition" rows="4" placeholder="Mô tả tình trạng sức khỏe của bệnh nhân..." required></textarea>
                                 <div id="condition-error" class="error-message">Không để trống!</div>
                             </div>
                             <div class="form-group">
                                 <label for="gia"></label>
-                                <input type="text" id="gia" name="gia" placeholder="Giá dịch vụ: từ 23.000VNĐ/Giờ"
-                                    disabled>
+                                <input type="text" id="gia" name="gia" placeholder="Giá dịch vụ: từ 23.000VNĐ/Giờ" disabled>
                             </div>
                             <button type="submit" id="submitButton">Đặt lịch</button>
                         </div>
                         <div class="booking-info-card">
                             <p class="section-title">Lưu ý quan trọng!</p>
                             <ol class="info-list">
-                                <li>Dịch vụ chỉ áp dụng tại bệnh viện. Bạn và nhân viên sẽ gặp nhau tại bệnh viện theo
-                                    giờ đã đặt.</li>
+                                <li>Dịch vụ chỉ áp dụng tại bệnh viện. Bạn và nhân viên sẽ gặp nhau tại bệnh viện theo giờ đã đặt.</li>
                             </ol>
                             <p class="section-title">Hướng dẫn đặt dịch vụ</p>
                             <ol class="info-list">
-                                <li>Khi chọn <strong>"Đặt hộ người khác"</strong>, cần điền đúng thông tin
-                                    <strong>"Người được đặt hộ"</strong>.
-                                </li>
+                                <li>Khi chọn <strong>"Đặt hộ người khác"</strong>, cần điền đúng thông tin <strong>"Người được đặt hộ"</strong>.</li>
                                 <li>Chọn đúng bệnh viện bạn muốn đến khám.</li>
                                 <li>Địa điểm hẹn là khu vực cụ thể tại bệnh viện (ví dụ: cổng 1, cổng 2...).</li>
                                 <li>Ngày khám phải sau ngày hôm nay ít nhất <strong>1 ngày</strong>.</li>
@@ -377,18 +308,9 @@
     <?php include("Assets/footer.php"); ?>
     <script>
         $(document).ready(function () {
-            function checkLogin() {
+            // Hàm hiển thị thông báo (giả định đã có trong scripts.js)
 
-                const role = sessionStorage.getItem('role');
-                const mainContent = document.getElementById('ct');
-                // if (role !== '0') {
-                //     showNotification('Bạn không có quyền truy cập vào trang này!', 'danger', '../index.php');
-                //     return false;
-                // }
-                if (mainContent) mainContent.style.display = 'block';
-                return true;
-            }
-
+            // Hàm tải danh sách bệnh viện
             function loadHospitals() {
                 $.ajax({
                     url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_hospitals.php',
@@ -413,41 +335,14 @@
                 });
             }
 
-            function loadUserInfo() {
-                $.ajax({
-                    url: 'http://localhost/WEB_ThueHoTroKhamBenh/api/get_user_info.php',
-                    method: 'GET',
-                    xhrFields: {
-                        withCredentials: true // QUAN TRỌNG: để gửi cookie
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.success) {
-                            $('#full_name').val(data.data.name || '');
-                            $('#phone').val(data.data.sdt || '');
-                            updateButtonState();
-                        } else {
-                            showNotification(data.message || 'Không thể tải thông tin người dùng', 'danger');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        let message = 'Lỗi kết nối server. Vui lòng thử lại sau.';
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            message = response.message || message;
-                            if (response.error_code === 'TOKEN_EXPIRED') {
-                                showNotification(message, 'danger', 'login.php');
-                                return;
-                            }
-                        } catch (e) {
-                            console.error('Không thể parse JSON:', xhr.responseText);
-                        }
-                        showNotification(message, 'error');
-                    }
-                });
+            // Hàm tải thông tin người dùng
+            function loadUserInfo(userData) {
+                $('#full_name').val(userData.name || '');
+                $('#phone').val(userData.phone || '');
+                updateButtonState();
             }
 
-
+            // Hàm kiểm tra form hợp lệ
             function isFormValid() {
                 const full_name = $('#full_name').val().trim();
                 const phone = $('#phone').val().trim();
@@ -535,10 +430,12 @@
                 return isValid;
             }
 
+            // Cập nhật trạng thái nút submit
             function updateButtonState() {
                 $('#submitButton').prop('disabled', !isFormValid());
             }
 
+            // Xử lý thay đổi lựa chọn "Đặt cho bạn" hoặc "Đặt hộ người khác"
             $('input[name="datdv"]').change(function () {
                 const selected = $(this).val();
                 if (selected === 'ban') {
@@ -547,27 +444,38 @@
                     $('#an').show();
                     $('#namsinh-container').show();
                     $('#full_name, #phone').prop('disabled', true);
-                    loadUserInfo();
+                    if (window.currentUser) {
+                        loadUserInfo(window.currentUser);
+                    }
                 } else {
                     $('#formTitle').text('ĐẶT DỊCH VỤ CHO NGƯỜI KHÁC');
                     $('#guardianInfo').show();
                     $('#an').hide();
                     $('#namsinh-container').hide();
                     $('#full_name, #phone').prop('disabled', true);
-                    loadUserInfo();
+                    if (window.currentUser) {
+                        loadUserInfo(window.currentUser);
+                    }
                 }
                 updateButtonState();
             });
 
+            // Theo dõi thay đổi input để cập nhật trạng thái nút
             $('#full_name, #phone, #hospital, #diemhen, #date, #time, #condition, #quanhe, #ten, #sdt, #namsinh, #namsinh_guardian').on('input change', updateButtonState);
 
+            // Xử lý submit form đặt dịch vụ
             window.handleBooking = async function (event) {
                 event.preventDefault();
-                if (!checkLogin()) return false;
+
+                // Sử dụng currentUser từ header
+                if (!window.currentUser) {
+                    showNotification('Vui lòng đăng nhập để tiếp tục!', 'danger', '/WEB_ThueHoTroKhamBenh/public/login.php');
+                    return;
+                }
 
                 if (!isFormValid()) {
                     showNotification('Vui lòng điền đầy đủ và đúng thông tin!', 'danger');
-                    return false;
+                    return;
                 }
 
                 const button = $('#submitButton');
@@ -579,7 +487,6 @@
                 const appointment_date = $('#date').val();
                 const appointment_time = $('#time').val();
                 const condition = $('#condition').val().trim();
-                const token = sessionStorage.getItem('token');
                 const datdv = $('input[name="datdv"]:checked').val();
                 const loai = datdv === 'ban' ? '0' : '1';
                 const quanhe = $('#quanhe').val().trim();
@@ -592,7 +499,6 @@
                     full_name,
                     phone,
                     sdt,
-                    token,
                     hospital_id,
                     diemhen,
                     appointment_date,
@@ -611,6 +517,7 @@
                     const response = await fetch('http://localhost/WEB_ThueHoTroKhamBenh/api/place_order.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include', // Gửi cookie
                         body: JSON.stringify(payload)
                     });
 
@@ -624,15 +531,13 @@
                         message = data.message || message;
 
                         if (data.error_code === 'TOKEN_EXPIRED') {
-                            console.warn('Token expired, clearing sessionStorage');
-                            sessionStorage.removeItem('token');
-                            showNotification(message, 'danger', 'login.php');
-                            return false;
+                            showNotification(message, 'danger', '/WEB_ThueHoTroKhamBenh/public/login.php');
+                            return;
                         }
 
                         if (!response.ok || !data.success) {
                             showNotification(message, 'danger');
-                            return false;
+                            return;
                         }
 
                         showNotification('Đặt dịch vụ thành công! Vui lòng chờ xác nhận.', 'success', 'xemDV.php');
@@ -646,15 +551,38 @@
                 } finally {
                     button.prop('disabled', !isFormValid()).text('Đặt lịch');
                 }
-                return false;
             };
 
-            if (checkLogin()) {
-                loadHospitals();
-                if ($('input[name="datdv"]:checked').val() === 'ban') {
-                    loadUserInfo();
-                }
+            loadHospitals();
+            if ($('input[name="datdv"]:checked').val() === 'ban' && window.currentUser) {
+                loadUserInfo(window.currentUser);
             }
+
+            // Lắng nghe sự kiện userChecked từ header
+            window.addEventListener('userChecked', (event) => {
+                const userData = event.detail;
+                if (!window.currentUser) {
+                    showNotification('Vui lòng đăng nhập để tiếp tục.', 'danger', '/WEB_ThueHoTroKhamBenh/public/login.php');
+                return;
+                
+                }
+                if (userData) {
+                    currentUser = userData;
+                    window.currentUser = userData;
+                    if(userData.role !== 0){
+                        showNotification('ADIM thông báo: Không có quyền truy cập!', 'danger', '/WEB_ThueHoTroKhamBenh/public/login.php');
+                    return;
+                    }
+                    if ($('input[name="datdv"]:checked').val() === 'ban') {
+                        loadUserInfo(userData);
+                    }
+                } else {
+                    currentUser = null;
+                    window.currentUser = null;
+                    $('#full_name, #phone').val('').prop('disabled', false);
+                    updateButtonState();
+                }
+            });
         });
     </script>
 </body>

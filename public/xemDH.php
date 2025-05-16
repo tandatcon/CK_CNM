@@ -73,7 +73,7 @@ $(document).ready(function () {
     // Function to fetch and render orders
     function fetchOrders(apiEndpoint) {
         console.log('Fetching orders from', apiEndpoint);
-        fetch(`http://localhost/WEB_ThueHoTroKhamBenh/api/${apiEndpoint}`, {
+        fetch(`http://localhost/WEB_ThueHoTroKhamBenh/api/xemDHAPI.php`, {
             method: 'GET',
             credentials: 'include', // Gửi cookie
             headers: { 'Content-Type': 'application/json' }
@@ -91,30 +91,15 @@ $(document).ready(function () {
                                 <div class="flex-1">
                                     <div class="flex justify-between items-center mb-2">
                                         <h3 class="text-base font-semibold">Mã đơn: ${item.id || 'N/A'}</h3>
-                                        <span class="status-badge ${
-                                            item.trangthai == 0 ? 'status-pending' :
-                                            item.trangthai == 1 ? 'status-confirmed' :
-                                            item.trangthai == 2 ? 'status-in-progress' :
-                                            item.trangthai == 3 ? 'status-completed' :
-                                            'status-cancelled'
-                                        }">
-                                            ${
-                                                item.trangthai == 0 ? 'Chờ xác nhận' :
-                                                item.trangthai == 1 ? 'Đã xác nhận' :
-                                                item.trangthai == 2 ? 'Đang thực hiện' :
-                                                item.trangthai == 3 ? 'Đã hoàn tất' :
-                                                'Đã từ chối'
-                                            }
-                                        </span>
                                     </div>
-                                    <p class="text-sm"><i class="fas fa-hospital mr-2"></i><strong>Loại:</strong> ${item.loai == 0 ? 'Đặt cho bạn' : item.loai == 1 ? 'Đặt hộ người khác' : 'N/A'}</p>
+                                    <p class="text-sm"><i class="fas fa-hospital mr-2"></i><strong>Loại:</strong> ${item.loai == 0 ? 'Cá nhân' : item.loai == 1 ? 'Đặt hộ' : 'N/A'}</p>
                                     <p class="text-sm"><i class="fas fa-hospital mr-2"></i><strong>Bệnh viện:</strong> ${item.ten_benhvien || 'N/A'}</p>
                                     <p class="text-sm"><i class="fas fa-map-marker-alt mr-2"></i><strong>Địa điểm:</strong> ${item.diemhen || 'N/A'}</p>
                                     <p class="text-sm"><i class="fas fa-calendar-alt mr-2"></i><strong>Ngày:</strong> ${item.ngayhen || 'N/A'} <strong>Giờ:</strong> ${item.giohen || 'N/A'}</p>
                                     <p class="text-sm"><i class="fas fa-wallet mr-2"></i><strong>Chi phí:</strong> ${item.tongchiphi ? parseInt(item.tongchiphi).toLocaleString('vi-VN') + ' VND' : 'N/A'}</p>
                                 </div>
                                 <div class="mt-3 md:mt-0 md:ml-4">
-                                    <a href="xemDVCT.php?id=${item.id || ''}" class="inline-block bg-blue-500 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600">
+                                    <a href="xemDHCT.php?id=${item.id || ''}" class="inline-block bg-blue-500 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600">
                                         <i class="fas fa-eye mr-1"></i>Xem chi tiết
                                     </a>
                                 </div>

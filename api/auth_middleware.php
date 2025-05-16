@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/jwt_config.php';
@@ -8,17 +7,9 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost');
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: GET');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-ob_start(); // Bắt đầu output buffering để tránh lỗi header
-
-try {
-    // Kết nối cơ sở dữ liệu
+function authenticateUser() {
     $conn = getDBConnection();
+    $config = require __DIR__ . '/../includes/jwt_config.php';
 
     // Kiểm tra cookie access_token
     if (!isset($_COOKIE['access_token'])) {
@@ -27,10 +18,7 @@ try {
         exit;
     }
 
-    $config = require __DIR__ . '/../includes/jwt_config.php';
     $access_token = $_COOKIE['access_token'];
-    $decoded = null;
-
     try {
         // Thử giải mã access_token
         $decoded = JWT::decode($access_token, new Key($config['secret_key'], 'HS256'));
@@ -125,36 +113,6 @@ try {
         $decoded = (object)$payload;
     }
 
-    // Kiểm tra vai trò
-    if (!isset($decoded->role) || $decoded->role !== 0) { // Sửa !== thành != vì role là string trong JWT
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Không có quyền truy cập', 'error_code' => 'FORBIDDEN']);
-        exit;
-    }
-
-    // Truy vấn thông tin người dùng
-    $stmt = $conn->prepare("SELECT a.id, a.id_nguoikham, a.namsinh, a.gt, a.id_benhvien, b.ten_benhvien, 
-        a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai, a.loai, a.quanhe_ho, a.ten_ho, a.sdt_ho
-        FROM datdichvu a 
-        JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
-        WHERE a.id_nguoikham = :user_id AND a.trangthai IN (0,1,2,3)");
-    $stmt->execute(['user_id' => $decoded->user_id]);
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if ($orders && count($orders) > 0) {
-        echo json_encode(['success' => true, 'data' => $orders]);
-    } else {
-        http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Không có đơn đặt dịch vụ nào']);
-    }
-
-} catch (Exception $e) {
-    http_response_code(500);
-    $msg = getenv('APP_ENV') === 'development' ? $e->getMessage() : 'Token không hợp lệ hoặc lỗi máy chủ';
-    error_log('JWT Error: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => $msg, 'error_code' => 'SERVER_ERROR']);
+    return $decoded;
 }
-
-ob_end_flush(); // Kết thúc output buffering
-$conn = null;
 ?>

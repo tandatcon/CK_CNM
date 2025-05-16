@@ -61,7 +61,7 @@ try {
         setcookie('access_token', $jwt, [
             'expires' => time() + $config['expires_in'],
             'path' => '/',
-            'domain' => 'localhost',
+              
             'secure' => false,
             'httponly' => true,
             'samesite' => 'Lax'
@@ -71,7 +71,7 @@ try {
         setcookie('refresh_token', $refresh_token, [
             'expires' => $refresh_expiry,
             'path' => '/',
-            'domain' => 'localhost',
+            
             'secure' => false,
             'httponly' => true,
             'samesite' => 'Lax'

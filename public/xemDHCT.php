@@ -101,7 +101,7 @@
         // Function to fetch and render order details
         function fetchOrderDetails() {
             console.log('Fetching order details for ID:', orderId);
-            fetch(`http://localhost/WEB_ThueHoTroKhamBenh/api/xemDVCTAPI.php?id=${orderId}`, {
+            fetch(`http://localhost/WEB_ThueHoTroKhamBenh/api/xemDHCTAPI.php?id=${orderId}`, {
                 method: 'GET',
                 credentials: 'include', // Gửi cookie
                 headers: { 'Content-Type': 'application/json' }
@@ -160,14 +160,11 @@
             <hr><br>
         </div>
         <div class="mt-4 flex justify-center gap-4">
-            <a href="xemDV.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+            <a href="xemDH.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                 <i class="fas fa-arrow-left mr-2"></i>Quay lại danh sách
             </a>
-            ${item.trangthai === 3 ? `
-                <a href="khieunai.php" class="inline-block bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>Khiếu nại
-                </a>
-            ` : ''}
+            
+            
         </div>
     </div>`;
                         } else {
@@ -221,14 +218,10 @@
                             <hr><br>
                         </div>
                         <div class="mt-4 flex justify-center gap-4">
-                            <a href="xemDV.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                            <a href="xemDH.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                             <i class="fas fa-arrow-left mr-2"></i>Quay lại danh sách
                             </a>
-                            ${item.trangthai === 3 ? `
-                            <a href="khieunai.php" class="inline-block bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>Khiếu nại
-                            </a>
-                            ` : ''}
+                            
                         </div>
                     </div>`;
                         }

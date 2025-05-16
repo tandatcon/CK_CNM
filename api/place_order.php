@@ -11,10 +11,12 @@ use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost'); // Chỉ cho phép origin cụ thể
+header('Access-Control-Allow-Origin: http://localhost');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
+
+ob_start(); // Bắt đầu output buffering để tránh lỗi header
 
 try {
     // Kết nối cơ sở dữ liệu
@@ -27,12 +29,106 @@ try {
         exit;
     }
 
-    // Giải mã JWT
     $config = require __DIR__ . '/../includes/jwt_config.php';
-    $decoded = JWT::decode($_COOKIE['access_token'], new Key($config['secret_key'], 'HS256'));
+    $access_token = $_COOKIE['access_token'];
+    $decoded = null;
+
+    try {
+        // Thử giải mã access_token
+        $decoded = JWT::decode($access_token, new Key($config['secret_key'], 'HS256'));
+    } catch (ExpiredException $e) {
+        // Access token hết hạn, thử làm mới
+        error_log("Access token expired at: " . date('Y-m-d H:i:s', $e->getPayload()->exp));
+        $refresh_token = $_COOKIE['refresh_token'] ?? '';
+        error_log("Refresh token: " . ($refresh_token ?: "empty"));
+
+        if (empty($refresh_token)) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Thiếu refresh token', 'error_code' => 'MISSING_REFRESH_TOKEN']);
+            exit;
+        }
+
+        // Kiểm tra refresh_token trong CSDL
+        $stmt = $conn->prepare("SELECT id_user, expires_at FROM refresh_tokens WHERE token = :token AND expires_at > NOW()");
+        $stmt->execute(['token' => $refresh_token]);
+        $refresh_data = $stmt->fetch(PDO::FETCH_ASSOC);
+        error_log("Refresh data: " . json_encode($refresh_data) . ", NOW: " . date('Y-m-d H:i:s'));
+
+        if (!$refresh_data) {
+            error_log("Refresh token not found or expired");
+            $stmt = $conn->prepare("DELETE FROM refresh_tokens WHERE token = :token");
+            $stmt->execute(['token' => $refresh_token]);
+            setcookie('access_token', '', ['expires' => time() - 3600, 'path' => '/', 'domain' => 'localhost', 'secure' => false, 'httponly' => true, 'samesite' => 'Lax']);
+            setcookie('refresh_token', '', ['expires' => time() - 3600, 'path' => '/', 'domain' => 'localhost', 'secure' => false, 'httponly' => true, 'samesite' => 'Lax']);
+            http_response_code(401);
+            echo json_encode(["success" => false, "message" => "Refresh token không hợp lệ hoặc hết hạn", "error_code" => "INVALID_REFRESH_TOKEN"]);
+            exit;
+        }
+
+        // Lấy thông tin người dùng từ refresh_data
+        $stmt = $conn->prepare("SELECT id, sdt, name, role FROM user WHERE id = :id");
+        $stmt->execute(['id' => $refresh_data['id_user']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            http_response_code(401);
+            echo json_encode(["success" => false, "message" => "Người dùng không tồn tại", "error_code" => "USER_NOT_FOUND"]);
+            exit;
+        }
+
+        // Tạo access_token mới
+        $payload = [
+            "iss" => $config['issuer'],
+            "aud" => $config['audience'],
+            "iat" => time(),
+            "exp" => time() + $config['expires_in'],
+            "user_id" => $user['id'],
+            "phone" => $user['sdt'],
+            "name" => $user['name'],
+            "role" => $user['role']
+        ];
+        $new_access_token = JWT::encode($payload, $config['secret_key'], 'HS256');
+
+        // Tạo refresh_token mới
+        $new_refresh_token = bin2hex(random_bytes(32));
+        $refresh_expiry = time() + (30 * 24 * 3600);
+
+        // Cập nhật refresh_token trong CSDL
+        $stmt = $conn->prepare("UPDATE refresh_tokens SET token = :token, expires_at = :expires_at WHERE id_user = :user_id");
+        $stmt->execute([
+            'token' => $new_refresh_token,
+            'expires_at' => date('Y-m-d H:i:s', $refresh_expiry),
+            'user_id' => $user['id']
+        ]);
+
+        // Đặt lại cookie
+        if (!setcookie('access_token', $new_access_token, [
+            'expires' => time() + $config['expires_in'],
+            'path' => '/',
+            'domain' => 'localhost',
+            'secure' => false,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ])) {
+            error_log("Failed to set new access_token cookie");
+        }
+        if (!setcookie('refresh_token', $new_refresh_token, [
+            'expires' => $refresh_expiry,
+            'path' => '/',
+            'domain' => 'localhost',
+            'secure' => false,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ])) {
+            error_log("Failed to set new refresh_token cookie");
+        }
+
+        // Gán lại decoded với thông tin mới
+        $decoded = (object)$payload;
+    }
 
     // Kiểm tra vai trò
-    if ($decoded->role !== 0) {
+    if ($decoded->role !== 0) { // Sửa !== thành != vì role là string trong JWT
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Chỉ khách hàng được phép đặt dịch vụ', 'error_code' => 'FORBIDDEN']);
         exit;
@@ -104,18 +200,6 @@ try {
         exit;
     }
 
-    // Kiểm tra trùng lịch hẹn
-    // $stmt = $conn->prepare("
-    //     SELECT COUNT(*) FROM datdichvu 
-    //     WHERE id_benhvien = ? AND ngayhen = ? AND giohen = ? AND trangthai NOT IN ('CANCELLED')
-    // ");
-    // $stmt->execute([$hospital_id, $appointment_date, $appointment_time]);
-    // if ($stmt->fetchColumn() > 0) {
-    //     http_response_code(409);
-    //     echo json_encode(['success' => false, 'message' => 'Lịch hẹn đã được đặt, vui lòng chọn thời gian khác', 'error_code' => 'APPOINTMENT_CONFLICT']);
-    //     exit;
-    // }
-
     // Chuẩn bị dữ liệu để lưu
     $full_name = trim($input['full_name']);
     $phone = trim($input['phone']);
@@ -127,7 +211,7 @@ try {
     $sdt_ho = isset($input['guardian_phone']) ? trim($input['guardian_phone']) : '';
     $namsinh = $input['namsinh'];
     $gt = $input['gt'];
-    $trangthai ="0";
+    $trangthai = "0";
 
     // Kiểm tra namsinh hợp lệ
     if ($namsinh && ($namsinh < 1900 || $namsinh > date('Y'))) {
@@ -137,43 +221,43 @@ try {
     }
 
     // Lưu vào bảng datdichvu
-    // Lưu vào bảng orders
-    if ($quanhe_ho!=''){
+    if ($quanhe_ho != '') {
         $stmt = $conn->prepare("
-        INSERT INTO datdichvu (
-            id_nguoikham,quanhe_ho,ten_ho,namsinh,gt,sdt_ho,id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham,trangthai) 
-            VALUES ( ?, ?, ?, ?,?,?,?,?,?,?,?,?)
-    ");
-    
-    $stmt->execute([
-        $user_id,
-        $quanhe_ho,
-        $ten_ho,
-        $namsinh,
-        $gt,
-        $sdt_ho,
-        $hospital_id,
-        $diemhen,
-        $appointment_date,
-        $appointment_time,
-        $condition,
-        $trangthai,
+            INSERT INTO datdichvu (
+                id_nguoikham, quanhe_ho, ten_ho, namsinh, gt, sdt_ho, id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham, trangthai
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $user_id,
+            $quanhe_ho,
+            $ten_ho,
+            $namsinh,
+            $gt,
+            $sdt_ho,
+            $hospital_id,
+            $diemhen,
+            $appointment_date,
+            $appointment_time,
+            $condition,
+            $trangthai,
         ]);
-    }else{
-    $stmt = $conn->prepare("
-        INSERT INTO datdichvu (id_nguoikham,gt,namsinh,id_benhvien , diemhen, ngayhen, giohen, tinhtrang_nguoikham,trangthai) VALUES (?,?, ?, ?, ?, ?, ?, ?,?)
-    ");
-    $stmt->execute([
-        $user_id,
-        $gt,
-        $namsinh,
-        $hospital_id,
-        $diemhen,
-        $appointment_date,
-        $appointment_time,
-        $condition,
-        $trangthai,
-    ]);
+    } else {
+        $stmt = $conn->prepare("
+            INSERT INTO datdichvu (
+                id_nguoikham, gt, namsinh, id_benhvien, diemhen, ngayhen, giohen, tinhtrang_nguoikham, trangthai
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $user_id,
+            $gt,
+            $namsinh,
+            $hospital_id,
+            $diemhen,
+            $appointment_date,
+            $appointment_time,
+            $condition,
+            $trangthai,
+        ]);
     }
 
     // Lấy ID đơn hàng vừa tạo
@@ -182,13 +266,6 @@ try {
     // Trả về phản hồi thành công
     echo json_encode(['success' => true, 'message' => 'Đặt dịch vụ thành công']);
 
-} catch (ExpiredException $e) {
-    http_response_code(401);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Phiên đăng nhập đã hết hạn. Vui lòng làm mới token hoặc đăng nhập lại.',
-        'error_code' => 'TOKEN_EXPIRED'
-    ]);
 } catch (Exception $e) {
     http_response_code(500);
     error_log('Error: ' . $e->getMessage());
@@ -199,6 +276,6 @@ try {
     ]);
 }
 
-// Đóng kết nối
+ob_end_flush(); // Kết thúc output buffering
 $conn = null;
 ?>

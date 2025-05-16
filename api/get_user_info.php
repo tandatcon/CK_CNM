@@ -1,7 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -27,9 +25,9 @@ if (empty($token)) {
 
 
 try {
-    $secret_key = 'cabaymaublutopaz'; // Thay bằng khóa bí mật từ api/login.php
+    $config = require __DIR__ . '/../includes/jwt_config.php';
     // Giải mã token
-    $decoded = JWT::decode($token, new Key($secret_key, 'HS256'));
+    $decoded = JWT::decode($token, new Key($config['secret_key'], 'HS256'));
 
     // Kiểm tra role nếu cần
     if ($decoded->role !== 0) { // Chỉ cho phép nếu là khách hàng

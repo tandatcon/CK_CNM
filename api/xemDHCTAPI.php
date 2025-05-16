@@ -14,7 +14,7 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-ob_start(); // Bắt đầu output buffering để tránh lỗi header
+ob_start();
 
 try {
     // Kết nối cơ sở dữ liệu
@@ -32,28 +32,20 @@ try {
     $decoded = null;
 
     try {
-        // Thử giải mã access_token
         $decoded = JWT::decode($access_token, new Key($config['secret_key'], 'HS256'));
     } catch (ExpiredException $e) {
-        // Access token hết hạn, thử làm mới
-        error_log("Access token expired at: " . date('Y-m-d H:i:s', $e->getPayload()->exp));
         $refresh_token = $_COOKIE['refresh_token'] ?? '';
-        error_log("Refresh token: " . ($refresh_token ?: "empty"));
-
         if (empty($refresh_token)) {
             http_response_code(401);
             echo json_encode(['success' => false, 'message' => 'Thiếu refresh token', 'error_code' => 'MISSING_REFRESH_TOKEN']);
             exit;
         }
 
-        // Kiểm tra refresh_token trong CSDL
         $stmt = $conn->prepare("SELECT id_user, expires_at FROM refresh_tokens WHERE token = :token AND expires_at > NOW()");
         $stmt->execute(['token' => $refresh_token]);
         $refresh_data = $stmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Refresh data: " . json_encode($refresh_data) . ", NOW: " . date('Y-m-d H:i:s'));
 
         if (!$refresh_data) {
-            error_log("Refresh token not found or expired");
             $stmt = $conn->prepare("DELETE FROM refresh_tokens WHERE token = :token");
             $stmt->execute(['token' => $refresh_token]);
             setcookie('access_token', '', ['expires' => time() - 3600, 'path' => '/', 'domain' => 'localhost', 'secure' => false, 'httponly' => true, 'samesite' => 'Lax']);
@@ -63,7 +55,6 @@ try {
             exit;
         }
 
-        // Lấy thông tin người dùng từ refresh_data
         $stmt = $conn->prepare("SELECT id, sdt, name, role FROM user WHERE id = :id");
         $stmt->execute(['id' => $refresh_data['id_user']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -74,7 +65,6 @@ try {
             exit;
         }
 
-        // Tạo access_token mới
         $payload = [
             "iss" => $config['issuer'],
             "aud" => $config['audience'],
@@ -87,11 +77,9 @@ try {
         ];
         $new_access_token = JWT::encode($payload, $config['secret_key'], 'HS256');
 
-        // Tạo refresh_token mới
         $new_refresh_token = bin2hex(random_bytes(32));
         $refresh_expiry = time() + (30 * 24 * 3600);
 
-        // Cập nhật refresh_token trong CSDL
         $stmt = $conn->prepare("UPDATE refresh_tokens SET token = :token, expires_at = :expires_at WHERE id_user = :user_id");
         $stmt->execute([
             'token' => $new_refresh_token,
@@ -99,62 +87,63 @@ try {
             'user_id' => $user['id']
         ]);
 
-        // Đặt lại cookie
-        if (!setcookie('access_token', $new_access_token, [
+        setcookie('access_token', $new_access_token, [
             'expires' => time() + $config['expires_in'],
             'path' => '/',
             'domain' => 'localhost',
             'secure' => false,
             'httponly' => true,
             'samesite' => 'Lax'
-        ])) {
-            error_log("Failed to set new access_token cookie");
-        }
-        if (!setcookie('refresh_token', $new_refresh_token, [
+        ]);
+        setcookie('refresh_token', $new_refresh_token, [
             'expires' => $refresh_expiry,
             'path' => '/',
             'domain' => 'localhost',
             'secure' => false,
             'httponly' => true,
             'samesite' => 'Lax'
-        ])) {
-            error_log("Failed to set new refresh_token cookie");
-        }
+        ]);
 
-        // Gán lại decoded với thông tin mới
         $decoded = (object)$payload;
     }
 
-    // Kiểm tra vai trò
-    if (!isset($decoded->role) || $decoded->role !== 0) { // Sửa !== thành != vì role là string trong JWT
+    if (!isset($decoded->role) || $decoded->role !== 1) {
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Không có quyền truy cập', 'error_code' => 'FORBIDDEN']);
         exit;
     }
 
-    // Truy vấn thông tin người dùng
+    $order_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    if ($order_id <= 0) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Mã đơn hàng không hợp lệ', 'error_code' => 'INVALID_ORDER_ID']);
+        exit;
+    }
+
     $stmt = $conn->prepare("SELECT a.id, a.id_nguoikham, a.namsinh, a.gt, a.id_benhvien, b.ten_benhvien, 
-        a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai, a.loai, a.quanhe_ho, a.ten_ho, a.sdt_ho
+        a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai, a.loai, a.quanhe_ho, a.ten_ho, a.sdt_ho,
+        a.id_nhanvien, a.giodichvu, a.lydo_tuchoi, u.name, u.sdt
         FROM datdichvu a 
         JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
-        WHERE a.id_nguoikham = :user_id AND a.trangthai IN (0,1,2,3)");
-    $stmt->execute(['user_id' => $decoded->user_id]);
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        JOIN user u ON a.id_nguoikham = u.id
+        WHERE a.id = :order_id AND a.id_nhanvien = :user_id");
+    $stmt->execute(['order_id' => $order_id, 'user_id' => $decoded->user_id]);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($orders && count($orders) > 0) {
-        echo json_encode(['success' => true, 'data' => $orders]);
+    if ($order) {
+        echo json_encode(['success' => true, 'data' => $order]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Không có đơn đặt dịch vụ nào']);
+        echo json_encode(['success' => false, 'message' => 'Không tìm thấy đơn hàng']);
     }
 
 } catch (Exception $e) {
     http_response_code(500);
-    $msg = getenv('APP_ENV') === 'development' ? $e->getMessage() : 'Token không hợp lệ hoặc lỗi máy chủ';
+    $msg = getenv('APP_ENV') === 'development' ? $e->getMessage() : 'Lỗi máy chủ';
     error_log('JWT Error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => $msg, 'error_code' => 'SERVER_ERROR']);
 }
 
-ob_end_flush(); // Kết thúc output buffering
+ob_end_flush();
 $conn = null;
 ?>

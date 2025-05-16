@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,7 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 10000;
         }
+
         .notification-content {
             position: absolute;
             top: 50%;
@@ -30,24 +32,30 @@
             border-radius: 8px;
             text-align: center;
         }
+
         .notification-content.success {
             background: #4ade80;
             color: white;
         }
-        .notification-content.error {
+
+        .notification-content.danger {
             background: #ef4444;
             color: white;
         }
+
         .notification-content.warning {
             background: #facc15;
             color: black;
         }
+
         .notification-content i {
             margin-right: 8px;
         }
+
         .notification-content p {
             margin: 10px 0;
         }
+
         .notification-content button {
             padding: 8px 16px;
             background: #fff;
@@ -56,11 +64,13 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .notification-content button:hover {
             background: #e5e7eb;
         }
     </style>
 </head>
+
 <body>
     <div class="notification-modal" id="notificationModal">
         <div class="notification-content" id="notificationContent">
@@ -72,22 +82,22 @@
     <script>
         // Gọi API để đăng xuất
         fetch('http://localhost/WEB_ThueHoTroKhamBenh/api/logout.php', {
-    method: 'POST',
-    credentials: 'include' // Gửi kèm cookie
-})
-.then(res => res.json())
-.then(data => {
-    if (data.success) {
-        // Xoá sessionStorage nếu có
-        showNotification(data.message, 'success', '../index.php');
-    } else {
-        showNotification(data.message, 'danger', '../index.php');
-    }
-})
-.catch(err => {
-    console.error('Lỗi khi gọi API đăng xuất:', err);
-});
+            method: 'POST',
+            credentials: 'include' // Gửi kèm cookie
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(data.message, 'success', '../index.php');
+                } else {
+                    showNotification(data.message, 'danger', '../index.php');
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi khi gọi API đăng xuất:', err);
+            });
 
     </script>
 </body>
+
 </html>

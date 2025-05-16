@@ -5,8 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Đi cùng tôi</title>
-  <link rel="stylesheet" href="\WEB_ThueHoTroKhamBenh\public\Assets\styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="\WEB_ThueHoTroKhamBenh\public\Assets\styles.css?v=1">
+  <!-- Sử dụng phiên bản Font Awesome mới nhất để đảm bảo biểu tượng hiển thị -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <!-- Link Slick CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
   <link rel="stylesheet" type="text/css"
@@ -18,7 +19,6 @@
   <!-- Link Slick JS -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
-
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .header {
@@ -26,6 +26,72 @@
       top: 0;
       z-index: 50;
       background-color: white;
+    }
+
+    /* Thanh liên hệ nổi */
+    .contact-bar {
+      position: fixed;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-color: #1877f2;
+      border-radius: 10px;
+      padding: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .contact-bar a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      background-color: white;
+      border-radius: 50%;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .contact-bar a:hover {
+      transform: scale(1.1);
+    }
+
+    .contact-bar i,
+    .contact-bar img {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      color: #1877f2;
+    }
+
+    .contact-bar .phone {
+      background-color: white;
+    }
+
+    .contact-bar .phone i {
+      color: #25d366; /* Màu xanh lá đặc trưng cho điện thoại */
+    }
+
+    .contact-bar .zalo {
+      background-color: white;
+    }
+
+    .contact-bar .zalo img {
+      color: #0068ff; /* Màu xanh dương đặc trưng cho Zalo */
+      width: 35px;
+      height: 35px;
+    }
+
+    .contact-bar .gmail {
+      background-color: white;
+    }
+
+    .contact-bar .gmail i {
+      color: #ea4335; /* Màu đỏ đặc trưng cho Gmail */
     }
   </style>
 </head>
@@ -36,12 +102,11 @@
   ?>
   <main>
     <!-- Banner -->
-    <section class="banner" style="background-image: url('IMG/banner.jpg');">
+    <section class="banner" style="background-image: url('IMG/hit1.jpg');">
       <div class="banner-overlay">
         <h1 class="banner-title">Dịch vụ hỗ trợ đi khám bệnh</h1>
         <p class="banner-subtitle">Kết nối người cần giúp đỡ với người hỗ trợ tận tâm</p>
         <a href="#dat" class="cta-button">Đặt dịch vụ ngay</a>
-       
       </div>
     </section>
     <div>
@@ -64,7 +129,6 @@
           <p>Người đồng hành chu đáo, tận tâm và có kỹ năng hỗ trợ y tế cơ bản.</p>
         </div>
       </div>
-      
 
       <!-- Phần hình ảnh chuyển động tự động -->
       <div class="image-carousel">
@@ -96,6 +160,20 @@
     <?php
      include("public\Assets/footer.php");  
     ?>
+
+    <!-- Thanh liên hệ nổi -->
+    <div class="contact-bar">
+      <a href="https://zalo.me/0797008745" target="_blank" class="zalo">
+        <!-- Sử dụng hình ảnh Zalo tùy chỉnh -->
+        <img src="IMG/zalo.jpeg" alt="Zalo" width="30px">
+      </a>
+      <a href="mailto:your.email@gmail.com" class="gmail">
+        <i class="fas fa-envelope"></i>
+      </a>
+      <a href="tel:+84987654321" class="phone">
+        <i class="fas fa-phone"></i>
+      </a>
+    </div>
   </main>
 
   <script>
@@ -108,8 +186,6 @@
       });
     });
   </script>
-
-
 </body>
 
 </html>
