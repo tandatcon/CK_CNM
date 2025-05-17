@@ -10,6 +10,7 @@
         <a href="#loiich" class="nav-link">Về chúng tôi</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/datDV.php" class="nav-link customer-link">Đặt dịch vụ</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDV.php" class="nav-link customer-link">Dịch vụ của bạn</a>
+        <a href="/WEB_ThueHoTroKhamBenh/public/xemDVHN.php" class="nav-link driver-link" style="display: none;">Đơn dịch vụ hôm nay nè</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDH.php" class="nav-link driver-link" style="display: none;">Danh sách đơn</a>
         <a href="#dat" class="nav-link">Liên hệ</a>
         <span id="userName" class="nav-link" style="display: none;"></span>
@@ -32,37 +33,38 @@
     let currentUser = null;
 
     function updateHeader(user) {
-        const userNameElement = document.getElementById('userName');
-        const loginLink = document.querySelector('.login-link');
-        const registerLink = document.querySelector('.register-link');
-        const logoutLink = document.querySelector('.logout-link');
-        const customerLinks = document.querySelectorAll('.customer-link');
-        const driverLink = document.querySelector('.driver-link');
+    const userNameElement = document.getElementById('userName');
+    const loginLink = document.querySelector('.login-link');
+    const registerLink = document.querySelector('.register-link');
+    const logoutLink = document.querySelector('.logout-link');
+    const customerLinks = document.querySelectorAll('.customer-link');
+    const driverLinks = document.querySelectorAll('.driver-link'); // ✅ Sửa ở đây
 
-        if (user) {
-            console.log(user.role);
-            const safeName = user.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            userNameElement.textContent = `Xin chào ${safeName}`;
-            userNameElement.style.display = 'inline';
-            loginLink.style.display = 'none';
-            registerLink.style.display = 'none';
-            logoutLink.style.display = 'inline';
-            if (user.role === 0) {
-                customerLinks.forEach(link => link.style.display = 'inline');
-                driverLink.style.display = 'none';
-            } else if (user.role === 1) {
-                customerLinks.forEach(link => link.style.display = 'none');
-                driverLink.style.display = 'inline';
-            }
-        } else {
-            userNameElement.style.display = 'none';
-            loginLink.style.display = 'inline';
-            registerLink.style.display = 'inline';
-            logoutLink.style.display = 'none';
+    if (user) {
+        const safeName = user.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        userNameElement.textContent = `Xin chào ${safeName}`;
+        userNameElement.style.display = 'inline';
+        loginLink.style.display = 'none';
+        registerLink.style.display = 'none';
+        logoutLink.style.display = 'inline';
+
+        if (user.role === 0) {
             customerLinks.forEach(link => link.style.display = 'inline');
-            driverLink.style.display = 'none';
+            driverLinks.forEach(link => link.style.display = 'none');
+        } else if (user.role === 1) {
+            customerLinks.forEach(link => link.style.display = 'none');
+            driverLinks.forEach(link => link.style.display = 'inline'); // ✅ Sửa ở đây
         }
+    } else {
+        userNameElement.style.display = 'none';
+        loginLink.style.display = 'inline';
+        registerLink.style.display = 'inline';
+        logoutLink.style.display = 'none';
+        customerLinks.forEach(link => link.style.display = 'inline');
+        driverLinks.forEach(link => link.style.display = 'none');
     }
+}
+
 
     function checkLoginStatus() {
         $.ajax({
