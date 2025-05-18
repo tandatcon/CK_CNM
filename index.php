@@ -98,7 +98,8 @@
 
 <body class="bg-white text-gray-800">
   <?php
-    include_once("public\Assets\header.php");
+    include_once(__DIR__ . "/public/Assets/header.php");
+
   ?>
   <main>
     <!-- Banner -->
@@ -177,6 +178,7 @@
   </main>
 
   <script>
+    //window.addEventListener('load', checkLoginStatus);
     $(document).ready(function () {
       $('.image-carousel').slick({
         autoplay: true, // Tự động chuyển hình

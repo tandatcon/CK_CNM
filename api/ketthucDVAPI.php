@@ -142,13 +142,13 @@ try {
         exit;
     }
 
-    $giobatdau = $order['giobatdau'];
+    $giobatdau = $order['giobatdau']; //5:30
 
     // Tính tổng thời gian (chuyển thành phút), định dạng HH:mm
-    list($startHour, $startMinute) = explode(':', $giobatdau);
+    list($startHour, $startMinute) = explode(':', $giobatdau);//5 , 30
     list($endHour, $endMinute) = explode(':', $gioketthuc);
 
-    $startMinutes = ($startHour * 60) + $startMinute;
+    $startMinutes = ($startHour * 60) + $startMinute; //(5* 30 = 150) + 30 = 180 phut Lay phut
     $endMinutes = ($endHour * 60) + $endMinute;
     $totalMinutes = $endMinutes - $startMinutes;
 

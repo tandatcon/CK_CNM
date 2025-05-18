@@ -134,10 +134,10 @@ try {
 
     // Truy vấn thông tin người dùng
     $stmt = $conn->prepare("SELECT a.id, a.id_nguoikham, a.namsinh, a.gt, a.id_benhvien, b.ten_benhvien, 
-        a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai, a.loai, a.quanhe_ho, a.ten_ho, a.sdt_ho
+        a.diemhen, a.ngayhen, a.giohen, a.tinhtrang_nguoikham, a.tongchiphi, a.trangthai, a.loai, a.quanhe_ho, a.ten_ho, a.sdt_ho,a.giobatdau,a.gioketthuc
         FROM datdichvu a 
         JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
-        WHERE a.id_nhanvien = :user_id AND a.trangthai IN (1,2) AND a.ngayhen = CURDATE()");
+        WHERE a.id_nhanvien = :user_id AND a.trangthai IN (1,2,3) AND a.ngayhen = CURDATE()");
     $stmt->execute(['user_id' => $decoded->user_id]);
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -145,7 +145,7 @@ try {
         echo json_encode(['success' => true, 'data' => $orders]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Không có đơn đặt dịch vụ nào']);
+        echo json_encode(['success' => false, 'message' => 'Không có đơn đặt dịch vụ nào','error_code' => 'NO-ORDER']);
     }
 
 } catch (Exception $e) {

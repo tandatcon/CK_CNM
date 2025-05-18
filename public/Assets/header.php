@@ -12,7 +12,7 @@
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDV.php" class="nav-link customer-link">Dịch vụ của bạn</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDVHN.php" class="nav-link driver-link" style="display: none;">Đơn dịch vụ hôm nay nè</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDH.php" class="nav-link driver-link" style="display: none;">Danh sách đơn</a>
-        <a href="#dat" class="nav-link">Liên hệ</a>
+        <a href="/WEB_ThueHoTroKhamBenh/public/lienhe.php" class="nav-link">Liên hệ</a>
         <span id="userName" class="nav-link" style="display: none;"></span>
         <a href="/WEB_ThueHoTroKhamBenh/public/login.php" class="nav-link login-link"><i class="fas fa-user"></i> Đăng nhập</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/register.php" class="nav-link register-link"><i class="fas fa-user-plus"></i> Đăng ký</a>
@@ -117,4 +117,5 @@
     }
 
     window.addEventListener('load', checkLoginStatus);
+    window.addEventListener('load', updateHeader);
 </script>

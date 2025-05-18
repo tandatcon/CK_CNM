@@ -145,7 +145,7 @@ try {
         echo json_encode(['success' => true, 'data' => $orders]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Không có đơn đặt dịch vụ nào']);
+        echo json_encode(['success' => false, 'message' => 'Bạn chưa có đơn nào','error_code' => 'NO-ORDER']);
     }
 
 } catch (Exception $e) {

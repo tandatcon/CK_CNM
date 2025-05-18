@@ -38,23 +38,24 @@
             background-position-x: 100%;
             background-position-y: 5px;
         }
+        
     </style>
 </head>
 <body class="bg-white text-gray-800" id="xemDV">
     <?php include_once(__DIR__ . '/Assets/header.php'); ?>
 
     <div class="container mx-auto my-6 px-4" id="xemDV">
-        <h2 class="text-xl font-bold mb-4">Danh sách đơn dịch vụ</h2>
-        <div class="mb-4">
+        <h2 class="text-xl font-bold mb-4">Danh sách đơn</h2>
+        <!-- <div class="mb-4">
             <label for="orderFilter" class="text-sm font-medium mr-2">Hiển thị:</label>
             <select id="orderFilter" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="all" selected>Đơn dịch vụ đã đặt</option>
                 <option value="completed">Đơn dịch vụ đã hoàn tất</option>
             </select>
-        </div>
+        </div>-->
         <div id="orderList" class="space-y-4">
             <p class="text-sm text-gray-500">Đang tải danh sách đơn hàng...</p>
-        </div>
+        </div> 
     </div>
 
     <div id="userInfo" class="text-center my-4"></div>
@@ -120,13 +121,16 @@ $(document).ready(function () {
                     const an = document.getElementById('xemDV');
                     showNotification('Không có quyền truy cập. Vui lòng kiểm tra lại tài khoản.', 'danger','../index.php');
                     
-                    html = '<p class="text-sm text-gray-600">Không có quyền truy cập dữ liệu đơn hàng.</p>';
+                    //html = '<p class="text-sm text-gray-600">Không có quyền truy cập dữ liệu đơn hàng.</p>';
                 } else if (data.error_code === 'INVALID_REFRESH_TOKEN') {
                     showNotification('Phiên đăng nhập hết hạn. Đang chuyển hướng...', 'danger', '/WEB_ThueHoTroKhamBenh/public/login.php');
-                    html = '<p class="text-sm text-gray-600">Phiên đăng nhập hết hạn. Đang chuyển hướng...</p>';
+                    //html = '<p class="text-sm text-gray-600">Phiên đăng nhập hết hạn. Đang chuyển hướng...</p>';
+                }else if (data.error_code === 'NO-ORDER') {
+                    
+                    html = '<p class="text-sm text-gray-600">Bạn chưa có đơn nào!</p>';
                 } else {
                     showNotification(data.message || 'Lỗi không xác định từ server.', 'danger');
-                    html = '<p class="text-sm text-gray-600">Lỗi tải đơn hàng. Vui lòng thử lại.</p>';
+                    //html = '<p class="text-sm text-gray-600">Lỗi tải đơn hàng. Vui lòng thử lại.</p>';
                 }
             }
             $('#orderList').html(html);
@@ -150,7 +154,7 @@ $(document).ready(function () {
                 }
             }
             showNotification(message, 'danger');
-            $('#orderList').html('<p class="text-sm text-gray-600">Lỗi tải đơn hàng. Vui lòng thử lại.</p>');
+            //$('#orderList').html('<p class="text-sm text-gray-600">Lỗi tải đơn hàng. Vui lòng thử lại.</p>');
         });
     }
 
@@ -169,19 +173,19 @@ $(document).ready(function () {
     });
 
     // Handle filter change
-    $('#orderFilter').on('change', function () {
-        const filter = $(this).val();
-        console.log('Filter changed to:', filter);
-        if (!window.currentUser) {
-            showNotification('Vui lòng đăng nhập để tiếp tục.', 'danger', '/WEB_ThueHoTroKhamBenh/public/login.php');
-            return;
-        }
-        $('#orderList').html('<p class="text-sm text-gray-500">Đang tải danh sách đơn hàng...</p>');
-        if (filter === 'all') {
-            fetchOrders('xemDVAPI.php');
-        } else if (filter === 'completed') {
-            fetchOrders('xemDVHTAPI.php');
-        }
-    });
+    // $('#orderFilter').on('change', function () {
+    //     const filter = $(this).val();
+    //     console.log('Filter changed to:', filter);
+    //     if (!window.currentUser) {
+    //         showNotification('Vui lòng đăng nhập để tiếp tục.', 'danger', '/WEB_ThueHoTroKhamBenh/public/login.php');
+    //         return;
+    //     }
+    //     $('#orderList').html('<p class="text-sm text-gray-500">Đang tải danh sách đơn hàng...</p>');
+    //     if (filter === 'all') {
+    //         fetchOrders('xemDVAPI.php');
+    //     } else if (filter === 'completed') {
+    //         fetchOrders('xemDVHTAPI.php');
+    //     }
+    // });
 });
 </script>
