@@ -12,6 +12,7 @@
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDV.php" class="nav-link customer-link">Dịch vụ của bạn</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDVHN.php" class="nav-link driver-link" style="display: none;">Đơn dịch vụ hôm nay nè</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDH.php" class="nav-link driver-link" style="display: none;">Danh sách đơn</a>
+        <a href="/WEB_ThueHoTroKhamBenh/public/phancongDH.php" class="nav-link manager-link" style="display: none;">Phân công đơn dịch vụ</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/lienhe.php" class="nav-link">Liên hệ</a>
         <span id="userName" class="nav-link" style="display: none;"></span>
         <a href="/WEB_ThueHoTroKhamBenh/public/login.php" class="nav-link login-link"><i class="fas fa-user"></i> Đăng nhập</a>
@@ -39,7 +40,7 @@
     const logoutLink = document.querySelector('.logout-link');
     const customerLinks = document.querySelectorAll('.customer-link');
     const driverLinks = document.querySelectorAll('.driver-link'); // ✅ Sửa ở đây
-
+    const managerLinks = document.querySelectorAll('.manager-link');
     if (user) {
         const safeName = user.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         userNameElement.textContent = `Xin chào ${safeName}`;
@@ -51,9 +52,15 @@
         if (user.role === 0) {
             customerLinks.forEach(link => link.style.display = 'inline');
             driverLinks.forEach(link => link.style.display = 'none');
+            managerLinks.forEach(link => link.style.display = 'none');
         } else if (user.role === 1) {
             customerLinks.forEach(link => link.style.display = 'none');
             driverLinks.forEach(link => link.style.display = 'inline'); // ✅ Sửa ở đây
+            managerLinks.forEach(link => link.style.display = 'none');
+        } else if (user.role === 2) {
+            customerLinks.forEach(link => link.style.display = 'none');
+            driverLinks.forEach(link => link.style.display = 'none'); // ✅ Sửa ở đây
+            managerLinks.forEach(link => link.style.display = 'inline');
         }
     } else {
         userNameElement.style.display = 'none';
