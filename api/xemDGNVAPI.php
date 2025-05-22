@@ -28,7 +28,7 @@ try {
 
         // Truy vấn thông tin đầy đủ
         $stmt = $conn->prepare("
-            select * from danhgia a join nhanvien b on a.id_nhanvien=b.id_user where id_nhanvien = :user_id
+            select * from nhanvien where id_user = :user_id
         ");
         $stmt->execute(['user_id' => $id_nhanvien]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -46,14 +46,16 @@ try {
         a.trangthai, a.loai, a.quanhe_ho, 
         a.ten_ho, a.sdt_ho, a.id_nhanvien, 
         a.giodichvu, a.lydo_tuchoi, 
-        u.name, u.sdt, v.hoten, v.gtnv, x.sao,v.namsinhnv
+        u.name, u.sdt, v.hoten, v.gtnv, 
+        (SELECT AVG(sao) FROM danhgia WHERE id_nhanvien = v.id_user) as sao,
+        v.namsinhnv
         FROM datdichvu a 
         JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
         JOIN user u ON a.id_nguoikham = u.id
-        JOIN nhanvien v ON a.id_nhanvien=v.id_user
-        JOIN danhgia x ON v.id_user=x.id_nhanvien
+        JOIN nhanvien v ON a.id_nhanvien = v.id_user
         WHERE a.id = :order_id 
         AND a.id_nguoikham = :user_id");
+
         $stmt->execute(['order_id' => $order_id, 'user_id' => $jwtHandler->getUserId()]);
         $order = $stmt->fetch(PDO::FETCH_ASSOC);
 

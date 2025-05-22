@@ -202,7 +202,7 @@
             e.preventDefault();
             
             if ($('#sao').val() == 0) {
-                alert('Vui lòng chọn số sao đánh giá');
+                showNotification('Vui lòng nhập số sao đánh giá', 'warning');
                 return;
             }
 
@@ -226,15 +226,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Cảm ơn bạn đã đánh giá!');
-                    window.location.href = 'xemDH.php';
+                    showNotification('Cảm ơn bạn đã đánh giá', 'success','xemDV.php');
                 } else {
                     alert(data.message || 'Gửi đánh giá không thành công');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Lỗi kết nối server');
+                showNotification('Lỗi kết nói server', 'danger','../index.php');
             })
             .finally(() => {
                 $('button[type="submit"]').html('<i class="fas fa-check mr-2"></i>Gửi đánh giá').prop('disabled', false);
