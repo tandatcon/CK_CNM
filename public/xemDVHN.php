@@ -338,7 +338,7 @@
                             html = `
                             <div class="text-center py-6">
                                 <i class="fas fa-box-open text-3xl text-gray-400 mb-2"></i>
-                                <p class="text-sm text-gray-600">Không có đơn đặt dịch vụ nào</p>
+                                <p class="text-sm text-gray-600">Không có đơn đặt dịch vụ nào nè</p>
                             </div>`;
                         }
 

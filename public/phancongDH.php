@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phân Công Đơn Dịch Vụ - Đi cùng tôi</title>
-    <link rel="stylesheet" href="Assets/styles.css?v=3">
+    <title>Danh Sách Đơn Đặt Hàng - Đi cùng tôi</title>
+    <link rel="stylesheet" href="Assets/styles.css?v=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Sửa từ link rel="stylesheet" sang script -->
-    <script src="Assets/scripts.js"></script>
+    <script src="Assets/scripts.js?v=1"></script>
+    
+    
     <style>
         .order-card {
             transition: transform 0.2s, box-shadow 0.2s;
@@ -93,7 +96,7 @@
 
         <b><div id="orderSummary" class="mb-4 text-right text-sm text-gray-700 hidden" ></div> </b>
 
-        <div id="orderList" class="space-y-4 w-[80%]">
+        <div id="orderList" class="space-y-4 w-[80%] mx-auto">
             <div class="text-center py-8">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-4">
                 </div>
@@ -101,7 +104,7 @@
             </div>
         </div>
 
-        <div id="resultList" class="space-y-6 mt-8 hidden">
+        <div id="resultList" class="space-y-6 mt-8 w-[80%] hidden mx-auto">
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-xl font-semibold mb-4">Kết quả phân công</h3>
                 <div id="phanCongThanhCong" class="space-y-4"></div>
@@ -197,10 +200,13 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                             <p class="text-sm"><i class="fas fa-hospital mr-2"></i><strong>Bệnh viện ID:</strong> ${item.id_benhvien || 'N/A'}</p>
-                            <p class="text-sm"><i class="fas fa-calendar-alt mr-2"></i><strong>Ngày hẹn:</strong> ${item.ngayhen || 'N/A'}</p>
-                            <p class="text-sm"><i class="fas fa-clock mr-2"></i><strong>Giờ bắt đầu:</strong> ${item.giobatdau || 'N/A'}</p>
-                            <p class="text-sm"><i class="fas fa-clock mr-2"></i><strong>Giờ kết thúc:</strong> ${item.gioketthuc || 'N/A'}</p>
+                            <p class="text-sm"><i class="fas fa-calendar-alt mr-2"></i><strong>Ngày hẹn:</strong> ${item.ngayhen || 'N/A'} <strong>Giờ hẹn:</strong> ${item.giohen || 'N/A'}</p>
+                                    <a href="xemCTCPC.php?id=${item.id_don || ''}" class="inline-block bg-blue-500 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600 w-[30%]">
+                                        <i class="fas fa-eye mr-1"></i>Xem chi tiết
+                                    </a>
+
                         </div>
+                        
                     </div>`;
                         });
                     } else {

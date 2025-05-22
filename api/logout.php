@@ -7,40 +7,76 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/db_connect.php';
-require_once __DIR__ . '/../includes/jwt_config.php';
-require_once 'auth_middleware.php'; // Đường dẫn tới file chứa hàm authenticateUser
+require_once __DIR__ . '/../includes/JwtHandler.php'; // Sử dụng JwtHandler thay thế
+
+ob_start();
 
 try {
-    // Gọi hàm authenticateUser để kiểm tra và làm mới token nếu cần
-    $decoded = authenticateUser(); // Hàm này sẽ xử lý AT hết hạn và trả về thông tin người dùng
-
-    // Kết nối CSDL
+    // 1. Khởi tạo kết nối CSDL và JWT Handler
     $conn = getDBConnection();
+    $jwt = new JwtHandler($conn);
 
-    // Xóa refresh token liên quan trong CSDL
-    $stmt = $conn->prepare("DELETE FROM refresh_tokens WHERE id_user = :user_id");
-    if (!$stmt) {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Lỗi chuẩn bị truy vấn']);
-        exit;
+    // 2. Xác thực người dùng
+    $decoded = $jwt->validateToken();
+    $user_id = $jwt->getUserId();
+
+    // 3. Bắt đầu transaction để đảm bảo toàn vẹn dữ liệu
+    $conn->beginTransaction();
+
+    try {
+        // 4. Xóa tất cả refresh token của người dùng
+        $stmt = $conn->prepare("DELETE FROM refresh_tokens WHERE id_user = :user_id");
+        $stmt->execute(['user_id' => $user_id]);
+
+        // 5. Xóa cookie
+        $cookieOptions = [
+            'expires' => time() - 3600,
+            'path' => '/',
+            'domain' => 'localhost',
+            'secure' => false, // true nếu dùng HTTPS
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ];
+        
+        setcookie('access_token', '', $cookieOptions);
+        setcookie('refresh_token', '', $cookieOptions);
+
+        // 6. Commit transaction nếu thành công
+        $conn->commit();
+
+        // 7. Trả về kết quả thành công
+        echo json_encode([
+            'success' => true,
+            'message' => 'Đăng xuất thành công'
+        ]);
+
+    } catch (Exception $e) {
+        // Rollback nếu có lỗi
+        $conn->rollBack();
+        throw new Exception('Lỗi hệ thống khi xử lý đăng xuất', 500);
     }
 
-    $success = $stmt->execute(['user_id' => $decoded->user_id]);
-
-    // Xóa cookie access_token và refresh_token
-    setcookie('access_token', '', time() - 3600, '/', '', false, true);
-    setcookie('refresh_token', '', time() - 3600, '/', '', false, true);
-
-    if ($success) {
-        echo json_encode(['success' => true, 'message' => 'Đăng xuất thành công']);
-    } else {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Lỗi khi xóa token trong hệ thống']);
-    }
-
-    $conn = null;
 } catch (Exception $e) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Lỗi xác thực: ' . $e->getMessage()]);
+    // 8. Xử lý lỗi tập trung
+    $statusCode = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
+    http_response_code($statusCode);
+    
+    $errorMessage = (getenv('APP_ENV') === 'development') 
+        ? $e->getMessage() 
+        : ($statusCode === 500 ? 'Lỗi máy chủ' : 'Lỗi xác thực');
+    
+    error_log('Lỗi đăng xuất: ' . $e->getMessage());
+    
+    echo json_encode([
+        'success' => false,
+        'message' => $errorMessage,
+        'error_code' => $e->getCode() ?: 'SERVER_ERROR'
+    ]);
+} finally {
+    // 9. Dọn dẹp tài nguyên
+    ob_end_flush();
+    if (isset($conn)) {
+        $conn = null;
+    }
 }
 ?>

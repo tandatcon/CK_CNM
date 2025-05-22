@@ -109,10 +109,10 @@ $(document).ready(function () {
                 } else {
                     console.log('No orders found');
                     html = `
-                        <div class="text-center py-6">
-                            <i class="fas fa-box-open text-3xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-600">Không có đơn đặt dịch vụ nào</p>
-                        </div>`;
+                            <div class="text-center py-6">
+                                <i class="fas fa-box-open text-3xl text-gray-400 mb-2"></i>
+                                <p class="text-sm text-gray-600">Không có đơn đặt dịch vụ nào</p>
+                            </div>`;
                 }
             } else {
                 // Xử lý lỗi từ API
@@ -127,7 +127,7 @@ $(document).ready(function () {
                     //html = '<p class="text-sm text-gray-600">Phiên đăng nhập hết hạn. Đang chuyển hướng...</p>';
                 }else if (data.error_code === 'NO-ORDER') {
                     
-                    html = '<p class="text-sm text-gray-600">Bạn chưa có đơn nào!</p>';
+                    html = '<p class="text-sm text-gray-600">Không có đơn hàng!</p>';
                 } else {
                     showNotification(data.message || 'Lỗi không xác định từ server.', 'danger');
                     //html = '<p class="text-sm text-gray-600">Lỗi tải đơn hàng. Vui lòng thử lại.</p>';

@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/db_connect.php';
-require_once __DIR__ . '/../includes/JwtHandler.php'; // Thêm dòng này
+require_once __DIR__ . '/../includes/JwtHandler.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost');

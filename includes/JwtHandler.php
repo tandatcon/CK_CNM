@@ -123,5 +123,8 @@ class JwtHandler {
     public function getUserRole() {
         return $this->decoded->role ?? null;
     }
-}
+
+    
+    }
+
 ?>
