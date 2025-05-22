@@ -114,9 +114,10 @@ $(document).ready(function () {
                                     <p class="text-sm"><i class="fas fa-wallet mr-2"></i><strong>Chi phí:</strong> ${item.tongchiphi ? parseInt(item.tongchiphi).toLocaleString('vi-VN') + ' VND' : 'N/A'}</p>
                                 </div>
                                 <div class="mt-3 md:mt-0 md:ml-4">
-                                    <a href="xemDVCT.php?id=${item.id || ''}" class="inline-block bg-blue-500 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600">
-                                        <i class="fas fa-eye mr-1"></i>Xem chi tiết
-                                    </a>
+                                <a href="${item.trangthai == 3 ? 'xemDVHTCT.php' : 'xemDVCT.php'}?id=${item.id || ''}" 
+                                class="inline-block bg-blue-500 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600">
+                                    <i class="fas fa-eye mr-1"></i>Xem chi tiết
+                                </a>
                                 </div>
                             </div>`;
                     });

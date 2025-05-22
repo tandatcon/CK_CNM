@@ -39,10 +39,11 @@
     const registerLink = document.querySelector('.register-link');
     const logoutLink = document.querySelector('.logout-link');
     const customerLinks = document.querySelectorAll('.customer-link');
-    const driverLinks = document.querySelectorAll('.driver-link'); // ✅ Sửa ở đây
+    const driverLinks = document.querySelectorAll('.driver-link');
     const managerLinks = document.querySelectorAll('.manager-link');
+
     if (user) {
-        const safeName = user.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeName = (user.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         userNameElement.textContent = `Xin chào ${safeName}`;
         userNameElement.style.display = 'inline';
         loginLink.style.display = 'none';
@@ -55,11 +56,11 @@
             managerLinks.forEach(link => link.style.display = 'none');
         } else if (user.role === 1) {
             customerLinks.forEach(link => link.style.display = 'none');
-            driverLinks.forEach(link => link.style.display = 'inline'); // ✅ Sửa ở đây
+            driverLinks.forEach(link => link.style.display = 'inline');
             managerLinks.forEach(link => link.style.display = 'none');
         } else if (user.role === 2) {
             customerLinks.forEach(link => link.style.display = 'none');
-            driverLinks.forEach(link => link.style.display = 'none'); // ✅ Sửa ở đây
+            driverLinks.forEach(link => link.style.display = 'none');
             managerLinks.forEach(link => link.style.display = 'inline');
         }
     } else {
@@ -71,6 +72,7 @@
         driverLinks.forEach(link => link.style.display = 'none');
     }
 }
+
 
 
     function checkLoginStatus() {

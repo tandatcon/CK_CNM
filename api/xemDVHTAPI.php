@@ -26,6 +26,7 @@ try {
     $user_id = $jwt->getUserId();
 
     // 3. Truy vấn danh sách đơn hoàn tất (trangthai = 3)
+    
     $stmt = $conn->prepare("
         SELECT 
             a.id, a.id_nguoikham, a.namsinh, a.gt, 

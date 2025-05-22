@@ -101,7 +101,7 @@
         // Function to fetch and render order details
         function fetchOrderDetails() {
             console.log('Fetching order details for ID:', orderId);
-            fetch(`http://localhost/WEB_ThueHoTroKhamBenh/api/xemDHCTAPI.php?id=${orderId}`, {
+            fetch(`http://localhost/WEB_ThueHoTroKhamBenh/api/xemDVHTCTAPI.php?id=${orderId}`, {
                 method: 'GET',
                 credentials: 'include', // Gửi cookie
                 headers: { 'Content-Type': 'application/json' }
@@ -138,7 +138,7 @@
                                             item.trangthai == 3 ? '<b>Đã hoàn tất</b>' :
                                                 item.trangthai == 4 ? `<b>Đã bị từ chối</b><br><br><b><i class="fas fa-xmark mr-2"></i><span class="text-sm text-red-500">Lý do: ${item.lydo_tuchoi || 'N/A'}</span></b>` :
                                                     'Không xác định'}
-            </p><br><hr>
+            </p><br><hr><br>
             <h5 align="center"><strong>THÔNG TIN DỊCH VỤ</strong></h5><br>
             <p class="text-sm"><i class="fas fa-hospital mr-2"></i><strong>Bệnh viện đặt dịch vụ:</strong> ${item.ten_benhvien || 'N/A'}</p><br>
             <p class="text-sm"><i class="fas fa-map-marker-alt mr-2"></i><strong>Địa điểm hẹn tại bệnh viện:</strong> ${item.diemhen || 'N/A'}</p><br>
@@ -152,23 +152,29 @@
             <p class="text-sm"><i class="fas fa-stethoscope mr-2"></i><strong>Tình trạng:</strong> ${item.tinhtrang_nguoikham || 'N/A'}</p><br>
             <hr><br>
             <h5 align="center"><strong>THÔNG TIN NHÂN VIÊN</strong></h5><br>
-                            <p class="text-sm"><i class="fas fa-user mr-2"></i><strong>Nhân viên thực hiện:</strong> ${item.hoten || 'N/A'}</p><br>
-                            
-                            <p class="text-sm"><i class="fas fa-venus-mars mr-2"></i><strong>Giới tính:</strong> ${item.gtnv == 0 ? 'Nam' : item.gtnv == 1 ? 'Nữ' : 'N/A'}</p><br>
-                            <p class="text-sm"><i class="fas fa-birthday-cake mr-2"></i><strong>Năm sinh:</strong> ${item.namsinhnv || 'N/A'}</p><br>
-                            <p class="text-sm"><i class="fas fa-thumbs-up mr-2"></i><strong>Đánh giá bởi khách hàng:</strong> ${item.sao + '/<small>5</small> <i class="fas fa-star text-yellow-400"></i>' || 'N/A'}</p><br>
-                            <hr><br>
+            <p class="text-sm"><i class="fas fa-user mr-2"></i><strong>Nhân viên thực hiện:</strong> ${item.hoten || 'N/A'}</p><br>
+            
+            <p class="text-sm"><i class="fas fa-venus-mars mr-2"></i><strong>Giới tính:</strong> ${item.gtnv == 0 ? 'Nam' : item.gtnv == 1 ? 'Nữ' : 'N/A'}</p><br>
+            <p class="text-sm"><i class="fas fa-birthday-cake mr-2"></i><strong>Năm sinh:</strong> ${item.namsinhnv || 'N/A'}</p><br>
+            <p class="text-sm"><i class="fas fa-thumbs-up mr-2"></i><strong>Đánh giá bởi khách hàng:</strong> ${item.sao + '/<small>5</small> <i class="fas fa-star text-yellow-400"></i>' || 'N/A'}</p><br>
+            <hr><br>
             <h5 align="center"><strong>THÔNG TIN THANH TOÁN</strong></h5><br>
             <p class="text-sm"><i class="fas fa-clock mr-2"></i><strong>Số giờ thực hiện:</strong> ${item.giodichvu || 'N/A'}</p><br>
             <p class="text-sm"><i class="fas fa-wallet mr-2"></i><strong>Chi phí:</strong> ${item.tongchiphi ? parseInt(item.tongchiphi).toLocaleString('vi-VN') + ' VND' : 'N/A'}</p><br>
             <hr><br>
         </div>
         <div class="mt-4 flex justify-center gap-4">
-            <a href="xemDH.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+            <a href="xemDV.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                 <i class="fas fa-arrow-left mr-2"></i>Quay lại danh sách
             </a>
-            
-            
+            ${item.trangthai === 3 ? `
+                <a href="danhgiaNV.php?idNV=${item.id_nhanvien}" class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    <i class="fas fa-thumbs-up mr-2"></i>Đánh giá nhân viên
+                </a>
+                <a href="khieunai.php" class="inline-block bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Khiếu nại
+                </a>
+            ` : ''}
         </div>
     </div>`;
                         } else {
@@ -197,7 +203,7 @@
                                                 item.trangthai == 4 ? `<b>Đã bị từ chối</b><br><br><b><i class="fas fa-xmark mr-2"></i><span class="text-sm text-red-500">Lý do: ${item.lydo_tuchoi || 'N/A'}</span></b>` :
                                                     'Không xác định'}
                             </p><br><hr><br>
-                            <h5 align="center"><strong>THÔNG TIN DỊCH VỤ</strong></h5><br>
+                            <h5 align="center"><strong>THÔNG TIN DỊCH VỤ</strong></h5><br><br>
                             <p class="text-sm"><i class="fas fa-hospital mr-2"></i><strong>Bệnh viện đặt dịch vụ:</strong> ${item.ten_benhvien || 'N/A'}</p><br>
                             <p class="text-sm"><i class="fas fa-map-marker-alt mr-2"></i><strong>Địa điểm hẹn tại bệnh viện:</strong> ${item.diemhen || 'N/A'}</p><br>
                             <p class="text-sm"><i class="fas fa-calendar-alt mr-2"></i><strong>Ngày đặt lịch:</strong> ${item.ngayhen || 'N/A'} <i class="fas fa-clock mr-2"></i><strong>Giờ:</strong> ${item.giohen || 'N/A'}</p><br>
@@ -226,10 +232,17 @@
                             <hr><br>
                         </div>
                         <div class="mt-4 flex justify-center gap-4">
-                            <a href="xemDH.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                            <a href="xemDV.php" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                             <i class="fas fa-arrow-left mr-2"></i>Quay lại danh sách
                             </a>
-                            
+                            ${item.trangthai === 3 ? `
+                            <a href="danhgiaNV.php?idNV=${item.id_nhanvien}" class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                            <i class="fas fa-thumbs-up mr-2"></i>Đánh giá nhân viên
+                            </a>
+                            <a href="khieunai.php" class="inline-block bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>Khiếu nại
+                            </a>
+                            ` : ''}
                         </div>
                     </div>`;
                         }

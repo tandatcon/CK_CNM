@@ -25,7 +25,7 @@ try {
         $decoded = $jwtHandler->validateToken();
         
         // Kiểm tra quyền admin (role = 1)
-        if ($jwtHandler->getUserRole() !== 1) {
+        if ($jwtHandler->getUserRole() !== 0) {
             http_response_code(403);
             echo json_encode(['success' => false, 'message' => 'Không có quyền truy cập', 'error_code' => 'FORBIDDEN']);
             exit;
@@ -37,8 +37,6 @@ try {
             echo json_encode(['success' => false, 'message' => 'Mã đơn hàng không hợp lệ', 'error_code' => 'INVALID_ORDER_ID']);
             exit;
         }
-
-        
 
         $stmt = $conn->prepare("SELECT 
         a.id, a.id_nguoikham, a.namsinh, a.gt, 
@@ -55,7 +53,7 @@ try {
         JOIN nhanvien v ON a.id_nhanvien=v.id_user
         JOIN danhgia x ON v.id_user=x.id_nhanvien
         WHERE a.id = :order_id 
-        AND a.id_nhanvien = :user_id");
+        AND a.id_nguoikham = :user_id");
         $stmt->execute(['order_id' => $order_id, 'user_id' => $jwtHandler->getUserId()]);
         $order = $stmt->fetch(PDO::FETCH_ASSOC);
 

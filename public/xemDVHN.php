@@ -312,14 +312,14 @@
                                     <div class="mt-3 flex flex-row justify-center space-x-2">
                                         
                                         ${conLai <= 30 && item.giobatdau === '' ?
-                                        `<button class="btnTHDV inline-block bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600" onclick="batDauDichVu('${item.id}', this)">
+                                        `<button class="btnTHDV inline-block bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600" onclick="if(confirm('Bạn có chắc muốn bắt đầu dịch vụ không?')) batDauDichVu('${item.id}', this)">
                                                 <i class="fas fa-play mr-1"></i>Thực hiện dịch vụ
                                             </button>` :
                                         `<button class="inline-block bg-gray-400 text-white px-3 py-1 rounded text-sm" disabled>
                                                 <i class="fas fa-play mr-1"></i>Thực hiện dịch vụ
                                             </button>`}
                                         ${item.giobatdau && item.giobatdau !== '' && item.gioketthuc == '' ?
-                                        `<button class="btnKTDV inline-block bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600" onclick="ketThucDichVu('${item.id}', this)">
+                                        `<button class="btnKTDV inline-block bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600" onclick="if(confirm('Bạn có chắc muốn kết thúc dịch vụ không?')) ketThucDichVu('${item.id}', this)">
                                                 <i class="fas fa-stop mr-1"></i>Kết thúc dịch vụ
                                             </button>` :
                                         `<button class="inline-block bg-gray-400 text-white px-3 py-1 rounded text-sm" disabled>
