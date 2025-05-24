@@ -1,22 +1,29 @@
 <?php
+session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/JwtHandler.php';
+require_once __DIR__ . '/../includes/CsrfMiddleware.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-CSRF-TOKEN'); // Thêm X-CSRF-TOKEN vào danh sách headers
 
 ob_start();
 
+$csrf = new CsrfMiddleware;
+
 try {
-    // 1. Khởi tạo kết nối và JWT Handler
+    // 1. Kiểm tra CSRF Token
+    $csrf->verifyToken(); // Kiểm tra CSRF token trong header (X-CSRF-TOKEN)
+    
+    // 2. Khởi tạo kết nối và JWT Handler
     $conn = getDBConnection();
     $jwt = new JwtHandler($conn);
 
-    // 2. Xác thực token và kiểm tra quyền
+    // 3. Xác thực token và kiểm tra quyền
     $decoded = $jwt->validateToken();
     
     if ($jwt->getUserRole() !== 0) {
@@ -25,7 +32,7 @@ try {
 
     $user_id = $jwt->getUserId();
 
-    // 3. Truy vấn danh sách đơn đặt dịch vụ
+    // 4. Truy vấn danh sách đơn đặt dịch vụ
     $stmt = $conn->prepare("SELECT 
         a.id, a.id_nguoikham, a.namsinh, a.gt, 
         a.id_benhvien, b.ten_benhvien, 
@@ -42,7 +49,7 @@ try {
     $stmt->execute(['user_id' => $user_id]);
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // 4. Trả về kết quả
+    // 5. Trả về kết quả
     if (empty($orders)) {
         http_response_code(200); // 200 thay vì 404 vì không có đơn không phải lỗi
         echo json_encode([
@@ -58,7 +65,7 @@ try {
     }
 
 } catch (Exception $e) {
-    // 5. Xử lý lỗi tập trung
+    // 6. Xử lý lỗi tập trung
     $statusCode = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
     http_response_code($statusCode);
     
@@ -80,7 +87,7 @@ try {
         'error_code' => $e->getCode() ?: 'SERVER_ERROR'
     ]);
 } finally {
-    // 6. Dọn dẹp tài nguyên
+    // 7. Dọn dẹp tài nguyên
     ob_end_flush();
     if (isset($conn)) {
         $conn = null;

@@ -110,9 +110,11 @@
                 .then(data => {
                     console.log('API Response:', data);
                     let html = '';
+                    
                     if (data.success && data.data) {
                         console.log('Rendering order details');
                         const item = data.data;
+                        
                         if (item.loai == 0) {
                             html = `
     <div class="order-card bg-white rounded-lg shadow-md p-6 border border-gray-200">

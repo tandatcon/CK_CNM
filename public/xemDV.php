@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -68,15 +69,29 @@
     <?php include_once(__DIR__ . '/Assets/footer.php'); ?>
 </body>
 </html>
+
 <script>
 $(document).ready(function () {
+    function getCookie(name) {
+    let cookieArr = document.cookie.split(";");
+    for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i].trim();
+        if (cookie.startsWith(name + "=")) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return null;
+}
+
     // Function to fetch and render orders
     function fetchOrders(apiEndpoint) {
+        const csrfToken = getCookie('csrf_token'); // JS đọc cookie
+        //console.log(csrfToken);
         console.log('Fetching orders from', apiEndpoint);
         fetch(`http://localhost/WEB_ThueHoTroKhamBenh/api/${apiEndpoint}`, {
             method: 'GET',
             credentials: 'include', // Gửi cookie
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json','X-CSRF-Token': csrfToken }
         })
         .then(response => response.json())
         .then(data => {

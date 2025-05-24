@@ -7,13 +7,13 @@
     </div>
     <nav class="nav">
         <a href="/WEB_ThueHoTroKhamBenh/index.php" class="nav-link">Trang chủ</a>
-        <a href="#loiich" class="nav-link">Về chúng tôi</a>
+        <a href="#loiich" class="nav-link cs">Về chúng tôi</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/datDV.php" class="nav-link customer-link">Đặt dịch vụ</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDV.php" class="nav-link customer-link">Dịch vụ của bạn</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDVHN.php" class="nav-link driver-link" style="display: none;">Đơn dịch vụ hôm nay nè</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/xemDH.php" class="nav-link driver-link" style="display: none;">Danh sách đơn</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/phancongDH.php" class="nav-link manager-link" style="display: none;">Phân công đơn dịch vụ</a>
-        <a href="/WEB_ThueHoTroKhamBenh/public/lienhe.php" class="nav-link">Liên hệ</a>
+        <a href="/WEB_ThueHoTroKhamBenh/public/lienhe.php" class="nav-link cs">Liên hệ</a>
         <span id="userName" class="nav-link" style="display: none;"></span>
         <a href="/WEB_ThueHoTroKhamBenh/public/login.php" class="nav-link login-link"><i class="fas fa-user"></i> Đăng nhập</a>
         <a href="/WEB_ThueHoTroKhamBenh/public/register.php" class="nav-link register-link"><i class="fas fa-user-plus"></i> Đăng ký</a>
@@ -41,6 +41,7 @@
     const customerLinks = document.querySelectorAll('.customer-link');
     const driverLinks = document.querySelectorAll('.driver-link');
     const managerLinks = document.querySelectorAll('.manager-link');
+    const cs = document.querySelectorAll('.cs');
 
     if (user) {
         const safeName = (user.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -58,10 +59,12 @@
             customerLinks.forEach(link => link.style.display = 'none');
             driverLinks.forEach(link => link.style.display = 'inline');
             managerLinks.forEach(link => link.style.display = 'none');
+            cs.forEach(link => link.style.display = 'none');
         } else if (user.role === 2) {
             customerLinks.forEach(link => link.style.display = 'none');
             driverLinks.forEach(link => link.style.display = 'none');
             managerLinks.forEach(link => link.style.display = 'inline');
+            cs.forEach(link => link.style.display = 'none');
         }
     } else {
         userNameElement.style.display = 'none';

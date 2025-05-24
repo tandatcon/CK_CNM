@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Đi cùng tôi</title>
-  <link rel="stylesheet" href="\WEB_ThueHoTroKhamBenh\public\Assets\styles.css?v=1">
+  <link rel="stylesheet" href="\WEB_ThueHoTroKhamBenh\public\Assets\styles.css?v=2">
   <!-- Sử dụng phiên bản Font Awesome mới nhất để đảm bảo biểu tượng hiển thị -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <!-- Link Slick CSS -->

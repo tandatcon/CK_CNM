@@ -5,6 +5,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/jwt_config.php';
 require_once __DIR__ . '/../includes/JwtHandler.php';
+require_once __DIR__ . '/../includes/CsrfMiddleware.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost');
@@ -13,10 +14,11 @@ header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 ob_start();
-
+$csrf = new CsrfMiddleware;
 try {
     // Kết nối CSDL và khởi tạo JwtHandler
     $conn = getDBConnection();
+    $csrf->verifyToken();
     $jwtHandler = new JwtHandler($conn);
 
     try {

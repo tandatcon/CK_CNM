@@ -2,7 +2,15 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/jwt_config.php';
+require_once __DIR__ . '/../includes/CsrfMiddleware.php';
+$conn = getDBConnection(); // Lấy kết nối PDO từ hàm này
 
+// Sau đó mới khởi tạo RateLimiter với kết nối database
+require_once __DIR__ . '/../includes/DatabaseRateLimiter.php';
+$rateLimiter = new DatabaseRateLimiter($conn);
+
+$csrf = new CsrfMiddleware;
+$_SESSION['csrf_token'] = $csrf->generateToken();
 use Firebase\JWT\JWT;
 
 header('Content-Type: application/json');
@@ -16,6 +24,21 @@ $data = json_decode($input, true);
 
 $phone = $data['phone'] ?? '';
 $password = $data['password'] ?? '';
+
+//Kiểm tra rate limit trước khi xử lý đăng nhập
+$ip = $_SERVER['REMOTE_ADDR'];
+$result = $rateLimiter->check("login:$ip", 'login');
+
+if (!$result['allowed']) {
+    http_response_code(429);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Quá nhiều yêu cầu đăng nhập. Vui lòng thử lại sau ' . 
+                    $result['retry_after'] . ' giây.',
+        'retry_after' => $result['retry_after']
+    ]);
+    exit;
+}
 
 if (empty($phone) || empty($password)) {
     http_response_code(400);
@@ -46,8 +69,8 @@ try {
         $jwt = JWT::encode($payload, $config['secret_key'], 'HS256');
 
         // Tạo refresh token
-        $refresh_token = bin2hex(random_bytes(32)); // Chuỗi ngẫu nhiên 64 ký tự
-        $refresh_expiry = time() + (30 * 24 * 3600); // 30 ngày
+        $refresh_token = bin2hex(random_bytes(32));
+        $refresh_expiry = time() + (30 * 24 * 3600);
 
         // Lưu refresh token vào DB
         $stmt = $conn->prepare("INSERT INTO refresh_tokens (id_user, token, expires_at) VALUES (:user_id, :token, :expires_at)");
@@ -61,7 +84,6 @@ try {
         setcookie('access_token', $jwt, [
             'expires' => time() + $config['expires_in'],
             'path' => '/',
-              
             'secure' => false,
             'httponly' => true,
             'samesite' => 'Lax'
@@ -71,10 +93,15 @@ try {
         setcookie('refresh_token', $refresh_token, [
             'expires' => $refresh_expiry,
             'path' => '/',
-            
             'secure' => false,
             'httponly' => true,
             'samesite' => 'Lax'
+        ]);
+        setcookie("csrf_token", $_SESSION['csrf_token'], [
+            'httponly' => false,
+            'secure' => true,
+            'samesite' => 'Lax',
+            'path' => '/',
         ]);
 
         echo json_encode([

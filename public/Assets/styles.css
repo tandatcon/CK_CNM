@@ -72,8 +72,9 @@ body {
     to bottom right,
     #00FFFF 0%,
     #3a88f4 50%,
-    #5ba9ff 100%
-  ); /* Gradient xanh dương mềm mại hơn */
+    #dbdee2 100%
+  ); 
+  /* Gradient xanh dương mềm mại hơn */
   color: white;
   text-align: center;
   padding: 4rem 1.5rem;
@@ -84,40 +85,6 @@ body {
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ cho độ sâu */
 }
-.banner::before,
-    .banner::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 200%; /* Tăng chiều rộng để tạo hiệu ứng chuyển động */
-      height: 150px;
-      background: rgba(255, 255, 255, 0.3);
-      z-index: 1;
-    }
-
-    .banner::before {
-      background: rgba(47, 166, 190, 0.678);
-      clip-path: ellipse(60% 50% at 50% 100%);
-      animation: wave 8s infinite linear;
-    }
-
-    .banner::after {
-      background: rgba(148, 204, 216, 0.396);
-      clip-path: ellipse(70% 60% at 50% 100%);
-      animation: wave 10s infinite linear;
-      animation-delay: -2s;
-    }
-
-    /* Animation cho sóng */
-    @keyframes wave {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
 
 .banner-overlay {
   position: absolute;

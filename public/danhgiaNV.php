@@ -104,6 +104,14 @@
         </div>
     </div>
 
+    <div class="notification-modal" id="notificationModal">
+            <div class="notification-content" id="notificationContent">
+                <i id="notificationIcon"></i>
+                <p id="notificationMessage"></p>
+                <button onclick="closeNotification()">Đóng</button>
+            </div>
+        </div>
+
     <?php include_once(__DIR__ . '/Assets/footer.php'); ?>
 
     <script>
@@ -228,7 +236,8 @@
                 if (data.success) {
                     showNotification('Cảm ơn bạn đã đánh giá', 'success','xemDV.php');
                 } else {
-                    alert(data.message || 'Gửi đánh giá không thành công');
+                    showNotification(data.message, 'success','xemDV.php');
+                    //alert(data.message || 'Gửi đánh giá không thành công');
                 }
             })
             .catch(error => {

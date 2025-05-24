@@ -308,6 +308,16 @@
         <?php include("Assets/footer.php"); ?>
         <script>
             $(document).ready(function () {
+                function getCookie(name) {
+    let cookieArr = document.cookie.split(";");
+    for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i].trim();
+        if (cookie.startsWith(name + "=")) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return null;
+}
                 // Hàm hiển thị thông báo (giả định đã có trong scripts.js)
 
                 // Hàm tải danh sách bệnh viện
@@ -341,6 +351,7 @@
                     $('#phone').val(userData.phone || '');
                     updateButtonState();
                 }
+                
 
                 // Hàm kiểm tra form hợp lệ
                 function isFormValid() {
@@ -514,9 +525,10 @@
                     console.log('Payload gửi đi:', payload);
 
                     try {
+                        const csrfToken = getCookie('csrf_token'); // JS đọc cookie
                         const response = await fetch('http://localhost/WEB_ThueHoTroKhamBenh/api/place_order.php', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 'Content-Type': 'application/json','X-CSRF-Token': csrfToken  },
                             credentials: 'include', // Gửi cookie
                             body: JSON.stringify(payload)
                         });
@@ -586,5 +598,4 @@
             });
         </script>
     </body>
-
     </html>

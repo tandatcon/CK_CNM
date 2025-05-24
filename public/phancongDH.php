@@ -125,14 +125,24 @@
 
     <script>
         $(document).ready(function () {
+            function getCookie(name) {
+                let cookieArr = document.cookie.split(";");
+                for (let i = 0; i < cookieArr.length; i++) {
+                    let cookie = cookieArr[i].trim();
+                    if (cookie.startsWith(name + "=")) {
+                        return cookie.substring(name.length + 1);
+                    }
+                }
+            return null;
+        }
             // Hàm gọi API đơn giản (đã có xác thực trong header)
-
+            const csrfToken = getCookie('csrf_token'); // JS đọc cookie
             async function callApi(url, method = 'GET', body = null) {
                 const options = {
                     method: method,
                     credentials: 'include',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json','X-CSRF-Token': csrfToken
                     }
                 };
 

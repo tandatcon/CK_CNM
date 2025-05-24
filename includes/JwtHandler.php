@@ -72,6 +72,9 @@ class JwtHandler {
             'name' => $user['name'],
             'role' => $user['role']
         ];
+
+        //CSRF
+        //$payload['csrf_token'] = $this->generateCsrfToken();
         
         $new_access_token = JWT::encode($payload, $this->config['secret_key'], 'HS256');
         $new_refresh_token = bin2hex(random_bytes(32));
@@ -122,6 +125,23 @@ class JwtHandler {
 
     public function getUserRole() {
         return $this->decoded->role ?? null;
+    }
+
+    //CSRF TOKEN
+    public function generateCsrfToken() {
+        return bin2hex(random_bytes(32));
+    }
+
+    public function validateCsrfToken($headerToken) {
+        if (!isset($this->decoded->csrf_token)) {
+            throw new Exception('CSRF token missing in JWT', 403);
+        }
+        
+        if (!hash_equals($this->decoded->csrf_token, $headerToken)) {
+            throw new Exception('CSRF token mismatch', 403);
+        }
+        
+        return true;
     }
 
     

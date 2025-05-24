@@ -53,6 +53,7 @@ try {
         JOIN hospitals b ON a.id_benhvien = b.id_benhvien 
         JOIN user u ON a.id_nguoikham = u.id
         JOIN nhanvien v ON a.id_nhanvien = v.id_user
+        
         WHERE a.id = :order_id 
         AND a.id_nguoikham = :user_id");
 
